@@ -22,6 +22,7 @@
 	}
 
 	.box {
+		position: relative;
 		width: 70%; 
 		height: 550px;
 		background-color: rgba(255, 186, 186, 0.696); 
@@ -45,6 +46,7 @@
 		align-items: center; 
 		height: 80vh; 
 		width: 95vw; 
+		margin-left: 30px;
 	}
   p{
     font-size: 30px;
@@ -226,6 +228,31 @@
 	.about-button:active{
 		opacity: 0.7;
 	}
+	.music-button {
+		width: 70px;
+		height: 70px;
+		position: relative;
+		top: -272px;
+		right: 82px;
+		border-radius: 1.5%;
+		font-size: 40;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 1.5%;
+		border: lab(57.31% 24.63 10.16) 2px solid;
+		color: rgb(46, 46, 46);
+		background-color: rgba(255, 186, 186, 0.696); 
+		backdrop-filter: blur(2px);
+		-webkit-backdrop-filter: blur(8px);
+		margin: 0;
+	}
+	.clicked{
+		border: lab(55.3% 41.14 19.42) 2px solid;
+		background-color: rgba(255, 144, 144, 0.536); 
+	}
+  .music-button:hover {
+    box-shadow: 0px -10px 20px rgba(24, 26, 29, 0.2);
+	}
 </style>
 
 <div class="container">
@@ -240,7 +267,7 @@
 			</p>
 			<div class="button-container-top">
 		   <button class="about-button">about me</button>
-			 <button class="works-button">works</button>
+			 <button class="works-button">blogs</button>
 			 <button class="links-button">links</button>
 			</div>
 			<div class="button-container-bottom">
@@ -250,7 +277,27 @@
 			</div>
 		</div>
   </div>
+	<button id="playMusicButton" class="music-button">&#9833;</button>
 </div>
 
+<audio id="myMusic">
+  <source src="resources/2.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const playButton = document.getElementById('playMusicButton');
+const music = document.getElementById('myMusic');
+music.loop = true;
+
+playButton.addEventListener('click', () => {
+  if (music.paused) {
+    music.play();
+  } else {
+    music.pause();
+		music.currentTime = 0;
+  }
+  playButton.classList.toggle('clicked');
+});
+</script>
 
 </html>
