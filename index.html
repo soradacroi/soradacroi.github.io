@@ -273,14 +273,14 @@
 			  a data science student, an artist, and a developer
 			</p>
 			<div class="button-container-top">
-		   <button class="about-button">about me</button>
-			 <button class="works-button">blogs</button>
-			 <button class="links-button">links</button>
+		   <button class="about-button" id="abt">about me</button>
+			 <button class="works-button" id="work">blogs</button>
+			 <button class="links-button" id="link">links</button>
 			</div>
 			<div class="button-container-bottom">
-		   <button class="resume-button">resume</button>
-			 <button class="contact-button">contact</button>
-			 <button class="rirekisko-button">履歴書</button>
+		   <button class="resume-button" id="resume">resume</button>
+			 <button class="contact-button" id="contact">contact</button>
+			 <button class="rirekisko-button" id="rirekisko">履歴書</button>
 			</div>
 		</div>
   </div>
@@ -304,38 +304,65 @@
 </audio>
 
 <script>
-const playButton = document.getElementById('playMusicButton');
-const music = document.getElementById('myMusic');
-music.loop = true;
-const hover = document.getElementById('hover');
-const button_clicked = document.getElementById("button-clicked");
-const unclicked = document.getElementById("unclicked");
+	const playButton = document.getElementById('playMusicButton');
+	const music = document.getElementById('myMusic');
+	music.loop = true;
+	const hover = document.getElementById('hover');
+	const button_clicked = document.getElementById("button-clicked");
+	const unclicked = document.getElementById("unclicked");
+	const abt = document.getElementById("abt");
+	const work = document.getElementById("work");
+	const link = document.getElementById("link");
+	const resume = document.getElementById("resume");
+	const contact = document.getElementById("contact");
+	const rirekisko = document.getElementById("rirekisko");
 
 
-playButton.addEventListener('click', () => {
-  if (music.paused) {
+	abt.addEventListener('click', () => {
 		button_clicked.play()
-    music.play();
-  } else {
-		unclicked.play()
-    music.pause();
-    music.currentTime = 0;
-  }
-  playButton.classList.toggle('clicked');
-});
+	})
+	work.addEventListener('click', () => {
+		button_clicked.play()
+	})
+	link.addEventListener('click', () => {
+		button_clicked.play()
+	})
+	resume.addEventListener('click', () => {
+		button_clicked.play()
+	})
+	contact.addEventListener('click', () => {
+		button_clicked.play()
+	})
+	rirekisko.addEventListener('click', () => {
+		button_clicked.play()
+	})
 
-playButton.addEventListener('mouseover', () => {
-  if (music.paused) {
-    hover.play();
-  }
-});
+	
+	playButton.addEventListener('click', () => {
+		if (music.paused) {
+			button_clicked.play()
+			music.play();
+		} else {
+			unclicked.play()
+			music.pause();
+			music.currentTime = 0;
+		}
+  	playButton.classList.toggle('clicked');
+	});
+	
 
-playButton.addEventListener("mouseleave", () => {
-	if (music.paused) {
-		hover.play()
-	}
-})
+
+	playButton.addEventListener('mouseover', () => {
+		if (music.paused) {
+			hover.play();
+		}
+	});
+
+	playButton.addEventListener("mouseleave", () => {
+		if (music.paused) {
+			hover.play()
+		}
+	})
 
 </script>
-
 </html>
