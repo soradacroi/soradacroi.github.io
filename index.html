@@ -11,7 +11,7 @@
 
 	body {
 		background-color: #ffffff; 
-		background-image: url("resources/resized.jpg");
+		background-image: url("resources/bg.webp");
 		text-align: center;
 		margin: 20px;
 		font-family: georgia;
@@ -26,15 +26,16 @@
 		width: 70%; 
 		height: 550px;
 		background-color: rgba(255, 186, 186, 0.496); 
-		align-self: center;
 		border-radius: 1.5%;
-		margin-top: 80px;
+		margin-top: 170px;
+		margin-left: 60px;
 		min-width: 400px;
 		max-width: 800px;
 		border: lab(57.31% 24.63 10.16) 2px solid;
 		box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
 		backdrop-filter: blur(4px);
 		-webkit-backdrop-filter: blur(8px);
+		border-bottom: 0;
 		transition: box-shadow 0.2s;
 		z-index: 100;
 	}
@@ -47,7 +48,6 @@
 		align-items: center; 
 		height: 80vh; 
 		width: 95vw; 
-		margin-left: 30px;
 	}
   p{
     font-size: 30px;
@@ -56,8 +56,7 @@
   }
 	.text-box {
     margin-top: -18.5px;
-		background-color: rgba(247, 244, 234, 0.5);
-		background-image: linear-gradient(to bottom, rgba(255, 251, 251, 0.3), rgba(253, 249, 236, 0.3));
+		background-image: linear-gradient(to bottom, rgba(247, 244, 234, 0.7), rgba(253, 249, 236, 0.5));
     margin-left: 2.2px;
 		width: 99.4%;
 		height: 87.9%;
@@ -231,9 +230,9 @@
 	}
 	.music-button {
 		width: 90px;
-		height: 62px;
+		height: 55px;
 		position: relative;
-		top: -205px;
+		top: -156px;
 		right: 59px;
 		font-size: 40;
 		font-weight: bold;
@@ -260,6 +259,80 @@
     box-shadow: 0px 0px 20px rgba(24, 26, 29, 0.3);
 		right: 20px;
 	}
+
+
+	.copyright{
+		font-family: OpenSans, sans-serif;
+		position: absolute; 
+		bottom: 0; 
+		left: 48.6%; 
+		transform: translateX(-50%);
+	}
+	
+
+.popup-header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 0 15px; 
+  background-color: rgba(255, 150, 150, 0.7);
+  border-radius: 10px 10px 0 0;
+  margin: -30px; 
+  margin-bottom: 30px; 
+}
+
+
+.popup-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.popup-content {
+  border: lab(57.31% 24.63 10.16) 2px solid;
+	background-color: rgba(255, 186, 186, 0.496); 
+	box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+  padding: 30px;
+  border-radius: 10px;
+  height: 600px;
+  max-width: 500px;
+  width: 90%;
+  position: absolute;
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  text-align: center;
+}
+.close-button {
+  
+  position: relative;
+  font-size: 24px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.popup-content h2 {
+  font-family: OpenSans, sans-serif;
+  color: #252525;
+  margin: 0;
+}
+
+.popup-content p {
+  color: #1a1a1a;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+
 </style>
 
 <div class="container">
@@ -286,6 +359,25 @@
   </div>
 	<button id="playMusicButton" class="music-button">&#9836;</button>
 </div>
+<div class="copyright">&#169; 2025 soradacroi. All Rights Reserved.</div>
+
+
+
+
+<div id="aboutPopup" class="popup-container">
+  <div class="popup-content">
+    <div id="popupHeader" class="popup-header">
+      <h2>about me</h2>
+      <button class="close-button">&times;</button>
+    </div>
+    <p>
+      about meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout me
+      about meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout meabout me
+    </p>
+  </div>
+</div>
+
+
 
 <audio id="myMusic">
   <source src="resources/2.mp3" type="audio/mpeg">
@@ -337,12 +429,13 @@
 		button_clicked.play()
 	})
 
-	
+
 	playButton.addEventListener('click', () => {
 		if (music.paused) {
 			button_clicked.play()
 			music.play();
-		} else {
+		} 
+		else {
 			unclicked.play()
 			music.pause();
 			music.currentTime = 0;
@@ -364,5 +457,63 @@
 		}
 	})
 
+// pop up my ass, i hate this shit idk how it works but it works ################################################################################################################################################
+
+const aboutButton = document.querySelector('.about-button');
+const popup = document.getElementById('aboutPopup');
+const popupContent = document.querySelector('.popup-content');
+const closeButton = document.querySelector('.close-button');
+
+aboutButton.addEventListener('click', () => {
+  popup.style.display = 'flex';
+});
+
+
+closeButton.addEventListener('click', () => {
+  popup.style.display = 'none';
+	
+	unclicked.play()
+});
+
+
+window.addEventListener('click', (event) => {
+  if (event.target === popup) {
+    popup.style.display = 'none';
+  }
+});
+
+
+
+const popupHeader = document.getElementById('popupHeader');
+let isDragging = false;
+let startX, startY;
+
+popupHeader.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+
+
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (isDragging) {
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const currentLeft = popupContent.offsetLeft;
+    const currentTop = popupContent.offsetTop;
+
+    popupContent.style.left = `${currentLeft + dx}px`;
+    popupContent.style.top = `${currentTop + dy}px`;
+
+    startX = e.clientX;
+    startY = e.clientY;
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+});
 </script>
 </html>
