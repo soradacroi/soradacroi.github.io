@@ -10,7 +10,7 @@
 
     body {
       background-color: #ffffff;
-      background-image: url("resources/bg.jpg");
+      background-image: url("resources/bg.webp");
       text-align: center;
       margin: 20px;
       font-family: georgia;
@@ -28,13 +28,13 @@
       position: relative;
       width: 70%;
       height: 550px;
-      background-color: rgba(255, 186, 186, 0.27);
+      background-color: rgba(170, 170, 170, 0.351);
       border-radius: 1.5%;
       margin-top: 170px;
       margin-left: 60px;
       min-width: 400px;
       max-width: 800px;
-      border: rgb(184, 121, 121) 2px solid;
+      border: rgb(55, 55, 55) 2px solid;
       box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
@@ -61,8 +61,8 @@
       margin-top: -18.5px;
       background-image: linear-gradient(
         to bottom,
-        rgba(247, 244, 234, 0.7),
-        rgba(253, 249, 236, 0.5)
+        rgba(237, 237, 237, 0.7),
+        rgba(226, 226, 225, 0.5)
       );
       margin-left: 2.2px;
       width: 99.4%;
@@ -84,7 +84,7 @@
     .text2 {
       padding-top: 90px;
       font-size: 35px;
-      color: #535352;
+      color: #313131;
       font-weight: 500;
       margin-bottom: 0px;
     }
@@ -92,12 +92,12 @@
     .text3 {
       padding-top: 0px;
       font-size: 20px;
-      color: #535352;
+      color: #313131;
       font-weight: 500;
     }
 
     .sora {
-      color: #e56363;
+      color: #dd3737f2;
     }
 
     .button-container-bottom {
@@ -115,15 +115,15 @@
       font-weight: bold;
       cursor: pointer;
       background-color: #ff4d4d00;
-      border-color: rgb(71, 71, 71);
+      border-color: #262626;
       border-style: solid;
-      color: rgb(71, 71, 71);
+      color: #313131;
       border-radius: 5px;
       width: 140px;
       height: 75px;
     }
     .resume-button:hover {
-      background-color: #ff7d7d1e;
+      background-color: #6248481e;
       color: rgb(34, 34, 34);
     }
     .resume-button:active {
@@ -145,15 +145,15 @@
       font-weight: bold;
       cursor: pointer;
       background-color: #ff4d4d00;
-      border-color: rgb(71, 71, 71);
+      border-color: #262626;
       border-style: solid;
-      color: rgb(71, 71, 71);
+      color: #313131;
       border-radius: 5px;
       width: 140px;
       height: 75px;
     }
     .works-button:hover {
-      background-color: #ff7d7d1e;
+      background-color: #6248481e;
       color: rgb(34, 34, 34);
     }
     .works-button:active {
@@ -164,15 +164,15 @@
       font-weight: bold;
       cursor: pointer;
       background-color: #ff4d4d00;
-      border-color: rgb(71, 71, 71);
+      border-color: #262626;
       border-style: solid;
-      color: rgb(71, 71, 71);
+      color: #313131;
       border-radius: 5px;
       width: 140px;
       height: 75px;
     }
     .about-button:hover {
-      background-color: #ff7d7d1e;
+      background-color: #6248481e;
       color: rgb(34, 34, 34);
     }
     .about-button:active {
@@ -187,12 +187,12 @@
       font-size: 40;
       font-weight: bold;
       cursor: pointer;
-      border: lab(57.31% 24.63 10.16) 2px solid;
+      border: lab(52.8% 0 -0.01) 2px solid;
       border-radius: 7px;
       border-width: 1px;
       border-bottom: 0;
-      color: rgb(46, 46, 46);
-      background-color: rgba(255, 186, 186, 0.496);
+      color: rgb(21, 21, 21);
+      background-color: rgba(240, 240, 240, 0.283);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(8px);
       margin: 0px;
@@ -200,9 +200,9 @@
       transition: box-shadow 0.2s;
     }
     .clicked {
-      border: lab(55.3% 41.14 19.42) 2px solid;
+      border: lab(17.53% 0 0) 2px solid;
       border-bottom: 0;
-      background-color: rgba(255, 144, 144, 0.496);
+      background-color: #cacacabf;
       right: 20px;
     }
     .music-button:hover {
@@ -223,7 +223,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 0 15px;
-      background-color: rgba(255, 145, 145, 0.785);
+      background-color: rgba(144, 146, 148, 0.562);
       border-radius: 10px 10px 0 0;
       margin: -30px;
       margin-bottom: 30px;
@@ -250,14 +250,14 @@
     }
 
     .pop-content {
-      border: rgb(184, 121, 121) 2px solid;
-      background-color: #ffcaca3c;
+      border: rgb(45, 43, 43) 2px solid;
+      background-color: #eae7e766;
       box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       padding: 30px;
       border-radius: 10px;
-      height: 600px;
+      height: 660px;
       max-width: 500px;
       width: 500px;
       position: relative; 
@@ -274,6 +274,11 @@
       background: none;
       cursor: pointer;
       color: #333;
+      transition: background-color 0.3s;
+    }
+    .close-button:hover{
+      background-color: #ff000089;
+      color: #171717;
     }
 
     .pop-content h2 {
@@ -286,6 +291,49 @@
       color: #1a1a1a;
       font-size: 16px;
       line-height: 1.5;
+    }
+
+    img.pfp {
+      width: 128px;
+      height: 128px;
+    }
+
+    .abtme p {
+        font-size: 20px;
+        margin: 0%;
+        text-align: justify;
+    }
+
+    .header-section {
+      display: flex;
+      align-items: center; 
+      justify-content: center;
+      gap: 15px;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+    }
+
+    .header-section img {
+      width: 80px; 
+      height: 80px; 
+      border-radius: 50%;
+    }
+
+    .header-section .greeting {
+      font-size: 1.8em;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .link{
+      color: #0a1c3f;
+      font-size: 20px;
+      text-decoration: none;
+      margin-right: 40px;
+    }
+    .link:hover{
+      color: #0d00ff;
     }
   </style>
 
@@ -304,9 +352,9 @@
             about me
           </button>
           <button class="works-button" id="work" style="margin-left: 5%; border-width: 3px; z-index: 105">
-            works
+            works     
           </button>
-          <button class="resume-button" id="resume" style="margin-left: 5%; border-width: 3px; z-index: 105">
+          <button class="resume-button" id="resume" data-link="resources\resume.pdf" style="margin-left: 5%; border-width: 3px; z-index: 105">
             resume
           </button>
         </div>
@@ -320,11 +368,34 @@
     <div class="pop-content">
       <div id="abtHeader" class="abt-header">
         <h2>about me</h2>
-        <button class="close-button">&times;</button>
+        <button class="close-button">[x]</button>
       </div>
-      <div style="font-family: OpenSans; font-weight: 600">
-        <p>hey there, i'm sora.</p>
-        <p>hey there, i'm sora.</p>
+      <div class="abtme" style="font-family: OpenSans; font-weight: 600">
+        <div class="header-section">
+          <img src="resources\Default_pfp.jpg" style="-webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable="false">
+          <p class="greeting" style="color: #2a1d1d;">hey there, it's sora.</p>
+        </div>
+        <hr style="border: none; background-color: #515151; height: 3px;">
+        <p>I am currently pursuing my bachelor's degree in data science. A learner who finds joy in math, solving problems, programming,
+          making illustrations, and making some truly questionable music. I believe that creativity and logic go hand-in-hand.
+        </p>
+        <p style="color: #703b3b; font-size: 24px;">EDUCATION</p>
+        <p>[i will put after i complete my degree]</p>
+        <p style="color: #703b3b; font-size: 24px;">SKILLS</p>
+        <ul style="list-style: disc; padding: 0; margin: 0; text-align: left; font-size: 20px;">
+          <li>programming languages: python, c, gd-script, html/css, js </li>
+          <li>art and design: photoshop, medibang, opentoonz</li>
+          <li>music: fl studio, reaper, utau</li>
+        </ul>
+        <hr style="border: none; background-color: #515151; height: 3px;">
+        <p style="  -webkit-user-select: text; -moz-user-select: text; user-select: text;">email me: soradacroi@gmail.com</p>
+        <hr style="border: none; background-color: #515151; height: 3px;">
+        <p style="color: #703b3b; font-size: 24px;">LINKS</p>
+        <p>
+          <a class="link" target="_blank" href="https://github.com/soradacroi">github</a>
+          <a class="link" target="_blank" href="https://www.instagram.com/sora_da_croi/">instagram</a>
+          <a class="link" target="_blank" href="https://x.com/SoraDaCroi">twitter</a>
+        </p>
       </div>
     </div>
   </div>
@@ -333,11 +404,14 @@
     <div class="pop-content">
       <div id="worksHeader" class="abt-header">
         <h2>my works</h2>
-        <button class="close-button">&times;</button>
+        <button class="close-button">[x]</button>
       </div>
       <div style="font-family: OpenSans; font-weight: 600">
-        <p>dsadsadsa</p>
-        <p>jgsadkjhgdkasjhdgkasjhdgasjkhdgasjkhdgaskjhdga.</p>
+        <p style="font-size: 70px; font-weight: bold; color: rgb(140, 0, 0);">under construction</p>
+        <p style="font-size: 20px; color: #390a0a;">i need some more projects to showcase<br>
+          i need some more projects to showcase<br> i need some more projects to showcase<br> i need some more projects to showcase<br> 
+          i need some more projects to showcase<br> maybe after one year
+        </p>
       </div>
     </div>
   </div>
@@ -480,6 +554,10 @@
         isDragging = false;
         currentPopup = null;
       });
+    });
+
+    document.getElementById('resume').addEventListener('click', () => {
+      window.open(document.getElementById('resume').getAttribute('data-link'), '_blank');
     });
   </script>
 </html>
