@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AetherBound 2D Sandbox (Caves & Optimized Rendering)</title>
+    <title>AetherBound 2D Sandbox (Infinite World & Chunking)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght400;700&display=swap" rel="stylesheet">
     <style>
@@ -87,10 +87,11 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // MODIFIED IMPORTS for Chunk Management (Collections, Queries, Batch Writes)
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         window.firebase = {
-            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, getFirestore, doc, setDoc, getDoc
+            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, writeBatch
         };
     </script>
 </head>
@@ -111,13 +112,17 @@
     const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null; 
 
-    // --- Game Constants ---
+    // --- Game Constants (MODIFIED FOR INFINITE WORLD) ---
     const TILE_SIZE = 48; 
-    const WORLD_WIDTH_TILES = 100; 
-    const WORLD_HEIGHT_TILES = 60; 
+    // const WORLD_WIDTH_TILES = 100; // REMOVED - World is now infinite
+    const WORLD_HEIGHT_TILES = 60; // World is still finite vertically
     const GRAVITY = 1;
     const MAX_REACH_DISTANCE = 4; 
     
+    // --- CHUNK CONSTANTS ---
+    const CHUNK_WIDTH_TILES = 16;
+    const CHUNKS_TO_KEEP_LOADED = 5; // e.g., Player's chunk, 2 left, 2 right (5 total)
+
     // --- VIEWPORT CONSTANTS ---
     const VIEWPORT_WIDTH_TILES = 25; // How many tiles wide the screen is
     const VIEWPORT_HEIGHT_TILES = 15; // How many tiles high the screen is
@@ -129,7 +134,9 @@
     let db, auth;
     let userId = null;
     let isAuthReady = false;
-    const worldPath = (uid) => `artifacts/${appId}/users/${uid}/game_worlds/main_world`;
+    // MODIFICATION: Use a root path for world metadata and a subcollection for chunks
+    const worldMetaDataPath = (uid) => `artifacts/${appId}/users/${uid}/game_meta/main_world`;
+    const chunkCollectionPath = (uid) => `artifacts/${appId}/users/${uid}/game_chunks`;
 
     async function initializeFirebase() {
         try {
@@ -177,7 +184,7 @@
     };
     
     const player = {
-        x: canvas.width / 2, 
+        x: canvas.width / 2, // Start at a local position
         y: 0, 
         w: TILE_SIZE * 0.75, 
         h: TILE_SIZE * 1.5,
@@ -203,29 +210,66 @@
         offsetY: 0
     };
 
+    // --- CHUNK DATA STRUCTURE ---
+    // Stores loaded chunks, keyed by chunkX coordinate. 
+    // Format: { [chunkX: number]: TileMap[WORLD_HEIGHT_TILES][CHUNK_WIDTH_TILES] }
+    let worldChunks = {}; 
+    let currentChunkX = 0; // The chunk the player is currently in
 
-    let worldMap = [];
+    // --- Helper Functions for Tile/Chunk Conversion ---
+
+    /** Converts a world tile X coordinate to its chunk index. */
+    function getChunkX(tileX) {
+        // Math.floor works for negative coordinates correctly for chunk index: floor(-0.1) = -1
+        return Math.floor(tileX / CHUNK_WIDTH_TILES);
+    }
+    
+    /** Converts a world tile X coordinate to its local index within its chunk (0 to CHUNK_WIDTH_TILES - 1). 
+     * FIXED: Uses corrected modulus logic to handle negative X coordinates (moving left).
+     */
+    function getLocalTileX(tileX) {
+        // (x % n + n) % n ensures a positive remainder for all x
+        return (tileX % CHUNK_WIDTH_TILES + CHUNK_WIDTH_TILES) % CHUNK_WIDTH_TILES;
+    }
+
+    /** Gets a block ID from the loaded chunks. Returns 0 (Air) if the chunk is not loaded or outside vertical bounds. */
+    function getBlockId(tileX, tileY) {
+        const cX = getChunkX(tileX);
+        const lX = getLocalTileX(tileX);
+
+        if (tileY < 0 || tileY >= WORLD_HEIGHT_TILES) return 0; // Always Air outside vertical bounds
+        
+        if (worldChunks[cX]) {
+            // Access the chunk array [tileY][localX]
+            return worldChunks[cX][tileY][lX];
+        }
+        return 0; // Unloaded chunks are treated as empty (Air) for simplicity
+    }
+
+    /** Sets a block ID in the loaded chunks. */
+    function setBlockId(tileX, tileY, id) {
+        const cX = getChunkX(tileX);
+        const lX = getLocalTileX(tileX);
+
+        if (worldChunks[cX] && tileY >= 0 && tileY < WORLD_HEIGHT_TILES) {
+            worldChunks[cX][tileY][lX] = id;
+            return true;
+        }
+        return false;
+    }
+
+
     let keys = {};
     let mouse = { x: 0, y: 0, leftDown: false, rightDown: false }; 
 
-    // --- World Generation and Data Management ---
+    // --- World Generation and Data Management (MODIFIED) ---
 
-    /**
-     * A simple, fast pseudo-random number generator (PRNG) based on a seed.
-     * Returns a float between 0 (inclusive) and 1 (exclusive).
-     */
     function seededRandom(seed, index) {
         let x = (seed * 9301 + 49297) * (index + 1) % 233280;
         return x / 233280;
     }
 
-    // --- 1D Noise Functions (For Surface and Cave Depth) ---
-
-    /**
-     * Calculates surface height using multiple noise octaves (sine functions).
-     */
     function getHeightValue(x) {
-        // Deterministically generate noise parameters based on the WORLD_SEED
         const r1 = seededRandom(WORLD_SEED, 1);
         const frequency1 = 0.005 + (r1 * 0.015);
         const amplitude1 = 10 + (r1 * 10);    
@@ -242,24 +286,20 @@
         const noise2 = Math.sin(x * frequency2) * amplitude2;
         const noise3 = Math.sin(x * frequency3) * amplitude3;
 
-        // Randomized component for small, chaotic variance (non-deterministic)
-        const randomComponent = (Math.random() - 0.5) * 2; 
+        // Use seeded random for the random component to ensure chunk seams align
+        const rChaos = seededRandom(WORLD_SEED, x * 1337);
+        const randomComponent = (rChaos - 0.5) * 2; 
 
         return noise1 + noise2 + noise3 + randomComponent;
     }
     
-    /**
-     * Uses 1D noise to calculate the depth (Y-coordinate) where the main cave system starts (The Cave Entry).
-     */
     function getCaveEntryY(x, surfaceY) {
-        // Deterministically generate noise parameters based on the WORLD_SEED
         const r1 = seededRandom(WORLD_SEED, 10);
         const frequency1 = 0.01 + (r1 * 0.01);
         const amplitude1 = 8 + (r1 * 12);    
         
         const noise1 = Math.sin(x * frequency1) * amplitude1;
 
-        // --- MODIFICATION: Start caves closer to the surface (12 -> 8) ---
         const minDepthBelowSurface = 8; 
         const maxDepthBelowSurface = 30; 
         
@@ -271,89 +311,72 @@
         ));
     }
 
-    /**
-     * Uses 1D noise to calculate the depth (Y-coordinate) where the cave system essentially ends (The Cave Bottom).
-     */
     function getCaveBottomY(x) {
-        // Deterministically generate noise parameters based on the WORLD_SEED
         const r2 = seededRandom(WORLD_SEED, 20);
         const frequency2 = 0.008 + (r2 * 0.012); 
         const amplitude2 = 10 + (r2 * 15);      
         
         const noise2 = Math.sin(x * frequency2) * amplitude2;
         
-        const baseBottom = WORLD_HEIGHT_TILES * 0.7; // Fixed base depth for stability
+        const baseBottom = WORLD_HEIGHT_TILES * 0.7; 
         
         let bottomDepth = baseBottom + noise2;
         return Math.round(Math.min(
-            WORLD_HEIGHT_TILES - 5, // Keep a small bedrock layer
+            WORLD_HEIGHT_TILES - 5, 
             Math.max(WORLD_HEIGHT_TILES * 0.5, bottomDepth)
         ));
     }
 
 
-    /**
-     * Generates 2D noise for cave system carving. Frequencies are increased to produce
-     * smaller, choppier pockets (Swiss cheese effect) with a high density.
-     */
     function getCarvingNoise(x, y) {
-        // Deterministically generate noise parameters based on the WORLD_SEED
         const seedMultiplier = 1000; 
         
-        // Octave 1: Medium-scale density/shape (Increased frequency)
         const r4 = seededRandom(WORLD_SEED, 4 * seedMultiplier);
         const freq4 = 0.06 + (r4 * 0.04); 
         const amp4 = 1.0; 
         
-        // Octave 2: Fine-scale pockets/jagged edges (Increased frequency)
         const r5 = seededRandom(WORLD_SEED, 5 * seedMultiplier);
         const freq5 = 0.2 + (r5 * 0.3); 
         const amp5 = 0.5; 
 
-        // Combine Octaves for a noise value
         let noise = 0;
         
-        // Octave 1
         noise += Math.sin(x * freq4 + y * freq4) * amp4; 
-        
-        // Octave 2
         noise += Math.sin(x * freq5 * 0.8 + y * freq5 * 1.2) * amp5; 
         
-        // Normalize the noise (sum of amplitudes)
         const totalAmplitude = amp4 + amp5;
         
-        // Return a value normalized between -1 and 1
         return (noise / totalAmplitude);
     }
 
-
-    function generateNewWorld() {
-        WORLD_SEED = Math.floor(Math.random() * 1000000); 
-        console.log("Generating world with Hyper-Porous Caves and Seed:", WORLD_SEED);
-        
-        const newMap = [];
+    /** Generates a single chunk. */
+    function generateChunk(chunkX) {
+        const newChunk = [];
         const BASE_HEIGHT = Math.floor(WORLD_HEIGHT_TILES * 0.4); 
+        const startWorldX = chunkX * CHUNK_WIDTH_TILES;
 
-        // 1. Generate Surface Height Map (surfaceYMap)
+        // 1. Generate Surface Height Map (surfaceYMap) for this chunk
         const surfaceYMap = [];
-        for (let x = 0; x < WORLD_WIDTH_TILES; x++) {
+        for (let x = startWorldX; x < startWorldX + CHUNK_WIDTH_TILES; x++) {
             let height = getHeightValue(x) + BASE_HEIGHT;
             height = Math.min(WORLD_HEIGHT_TILES - 5, Math.max(BASE_HEIGHT - 10, height));
-            surfaceYMap[x] = Math.round(height);
+            // Store the height map by world X coordinate for consistency
+            surfaceYMap[x] = Math.round(height); 
         }
 
-        // 2. Generate Cave Depth Maps (entry and bottom)
+        // 2. Generate Cave Depth Maps (entry and bottom) for this chunk
         const caveEntryYMap = [];
         const caveBottomYMap = [];
-        for (let x = 0; x < WORLD_WIDTH_TILES; x++) {
+        for (let x = startWorldX; x < startWorldX + CHUNK_WIDTH_TILES; x++) {
             caveEntryYMap[x] = getCaveEntryY(x, surfaceYMap[x]);
             caveBottomYMap[x] = getCaveBottomY(x);
         }
 
-        // 3. Populate Solid Tiles (Dirt, Grass, Stone, Ore)
+        // 3. Populate Solid Tiles
         for (let y = 0; y < WORLD_HEIGHT_TILES; y++) {
-            newMap[y] = [];
-            for (let x = 0; x < WORLD_WIDTH_TILES; x++) {
+            newChunk[y] = [];
+            for (let localX = 0; localX < CHUNK_WIDTH_TILES; localX++) {
+                const x = startWorldX + localX;
                 const surface = surfaceYMap[x];
                 let blockId = 0;
 
@@ -362,99 +385,243 @@
                 } else if (y === surface) {
                     blockId = 2; // Grass
                 } else {
-                    // Underground layers
                     const depthBelowSurface = y - surface; 
                     
                     if (depthBelowSurface < 3) { 
                         blockId = 1; // Dirt
                     } else if (depthBelowSurface < 8) {
-                        blockId = (Math.random() < 0.7) ? 3 : 1; // Mix of Stone and Dirt
+                        // Use seeded random for deterministic generation
+                        const r = seededRandom(WORLD_SEED, x * y + 5); 
+                        blockId = (r < 0.7) ? 3 : 1; // Mix of Stone and Dirt
                     } else { 
                         blockId = 3; // Stone
                         
-                        // Ore generation: 3% chance deep underground
-                        if (Math.random() < 0.03) {
+                        // Ore generation
+                        const r = seededRandom(WORLD_SEED, x * y * 7 + 11);
+                        if (r < 0.03) {
                              blockId = 4; // Coal Ore
                         }
                     }
                 }
-                newMap[y][x] = blockId;
+                newChunk[y][localX] = blockId;
             }
         }
         
-        // 4. Cave Carving using 2D Noise constrained by 1D Depth Maps
-        // --- MODIFICATION: Lowered carving threshold from 0.38 to 0.25 for extreme density ---
+        // 4. Cave Carving
         const CAVE_THRESHOLD = 0.25; 
         for (let y = 0; y < WORLD_HEIGHT_TILES; y++) {
-            for (let x = 0; x < WORLD_WIDTH_TILES; x++) {
-                // Only carve caves in solid, non-surface blocks (ID 1, 3, 4)
-                if (newMap[y][x] !== 0 && newMap[y][x] !== 2) { 
+            for (let localX = 0; localX < CHUNK_WIDTH_TILES; localX++) {
+                const x = startWorldX + localX;
+                
+                if (newChunk[y][localX] !== 0 && newChunk[y][localX] !== 2) { 
                     
                     const entryY = caveEntryYMap[x];
                     const bottomY = caveBottomYMap[x];
                     
-                    // Check if the current block (x, y) is within the defined cave band (Entry to Bottom)
                     if (y >= entryY && y <= bottomY) {
                         const carvingNoise = getCarvingNoise(x, y);
                         
-                        // Dynamic threshold: Carving gets easier (threshold gets lower) as depth increases
                         const depthRange = bottomY - entryY || 1; 
-                        const depthFactor = (y - entryY) / depthRange; // 0 at entry, 1 at bottom
-                        // Reduce threshold by up to 10% towards the bottom
+                        const depthFactor = (y - entryY) / depthRange;
                         const dynamicThreshold = CAVE_THRESHOLD * (1 - 0.1 * depthFactor); 
                         
                         if (carvingNoise > dynamicThreshold) {
-                            newMap[y][x] = 0; // Carve out to Air
+                            newChunk[y][localX] = 0; // Carve out to Air
                         }
                     }
                 }
             }
         }
 
-
-        worldMap = newMap;
+        // Return the average surface height for spawning, based on the center tile of the chunk
+        const centerWorldX = startWorldX + Math.floor(CHUNK_WIDTH_TILES / 2);
+        return { chunk: newChunk, surfaceY: surfaceYMap[centerWorldX] };
+    }
+    
+    /** Initializes the world, generating a central chunk and positioning the player. */
+    function generateInitialWorld() {
+        WORLD_SEED = Math.floor(Math.random() * 1000000); 
+        console.log("Generating initial chunk (X=0) with Seed:", WORLD_SEED);
         
-        // Find a safe spawn point (middle of the map, 2 tiles above the surface)
-        const spawnX = Math.floor(WORLD_WIDTH_TILES / 2);
-        const spawnY = surfaceYMap[spawnX] - 2; 
+        // Generate Chunk 0
+        const { chunk, surfaceY } = generateChunk(0);
+        worldChunks[0] = chunk;
+        currentChunkX = 0;
         
-        player.x = spawnX * TILE_SIZE + (TILE_SIZE - player.w) / 2;
+        // Find a safe spawn point in the middle of chunk 0
+        const spawnWorldX = Math.floor(CHUNK_WIDTH_TILES / 2); // World X tile coordinate
+        const spawnY = surfaceY - 2; 
+        
+        player.x = spawnWorldX * TILE_SIZE + (TILE_SIZE - player.w) / 2;
         player.y = spawnY * TILE_SIZE;
         
-        // Ensure player spawn area is clear
+        // Ensure player spawn area is clear in the chunk
         for(let i = 0; i < player.h / TILE_SIZE + 1; i++) {
-             if (newMap[spawnY + i] && newMap[spawnY + i][spawnX] !== undefined) {
-                 newMap[spawnY + i][spawnX] = 0;
+             // We need to check if the row exists before accessing it
+             if (worldChunks[0][spawnY + i]) {
+                 worldChunks[0][spawnY + i][getLocalTileX(spawnWorldX)] = 0;
              }
+        }
+        
+        // Pre-load neighboring chunks
+        loadAndManageChunks(true); // Force a check
+    }
+    
+    /** Checks player position and loads/unloads chunks as needed. */
+    async function loadAndManageChunks(force = false) {
+        const playerTileX = Math.floor((player.x + player.w / 2) / TILE_SIZE);
+        const newChunkX = getChunkX(playerTileX);
+        
+        if (newChunkX === currentChunkX && !force) return; // Player is still in the same chunk
+        
+        console.log(`Player moved from chunk ${currentChunkX} to ${newChunkX}.`);
+        currentChunkX = newChunkX;
+
+        const chunksToLoad = [];
+        // Calculate the range of chunks that should be loaded (e.g., current +/- 2)
+        const minChunk = currentChunkX - Math.floor(CHUNKS_TO_KEEP_LOADED / 2);
+        const maxChunk = currentChunkX + Math.ceil(CHUNKS_TO_KEEP_LOADED / 2) - 1;
+
+        // 1. Identify necessary chunks to be loaded
+        for (let cX = minChunk; cX <= maxChunk; cX++) {
+            if (!worldChunks[cX]) {
+                chunksToLoad.push(cX);
+            }
+        }
+        
+        // 2. Unload far-away chunks
+        const chunksToUnload = Object.keys(worldChunks).map(Number).filter(cX => cX < minChunk || cX > maxChunk);
+        
+        if (chunksToUnload.length > 0) {
+            console.log("Saving and Unloading chunks:", chunksToUnload.join(', '));
+            await saveChunks(chunksToUnload); // Save before unloading
+            chunksToUnload.forEach(cX => delete worldChunks[cX]);
+        }
+
+        // 3. Load new chunks from Firebase or generate
+        await loadChunks(chunksToLoad);
+    }
+    
+    /** Loads a list of chunks from Firebase. Generates if not found. */
+    async function loadChunks(chunkXList) {
+        if (chunkXList.length === 0) return;
+        
+        // Must wait for Firebase auth before trying to load
+        if (!isAuthReady || !userId) {
+            console.warn("Loading chunks offline. Generating all missing chunks.");
+            chunkXList.forEach(cX => {
+                const { chunk } = generateChunk(cX);
+                worldChunks[cX] = chunk;
+            });
+            return;
+        }
+
+        const chunksCollection = firebase.collection(db, chunkCollectionPath(userId));
+        const chunksToGenerate = [];
+
+        for (const cX of chunkXList) {
+            const docRef = firebase.doc(chunksCollection, `chunk_${cX}`);
+            
+            try {
+                const docSnap = await firebase.getDoc(docRef);
+                if (docSnap.exists() && docSnap.data().mapData) {
+                    // Use JSON.parse to convert the stored string back into an array
+                    worldChunks[cX] = JSON.parse(docSnap.data().mapData); 
+                    console.log(`Loaded chunk ${cX} from Firebase.`);
+                } else {
+                    chunksToGenerate.push(cX);
+                }
+            } catch (error) {
+                console.warn(`Error loading chunk ${cX}:`, error);
+                chunksToGenerate.push(cX); // Generate if load fails
+            }
+        }
+        
+        // Generate any chunks not found in the database
+        chunksToGenerate.forEach(cX => {
+            const { chunk } = generateChunk(cX);
+            worldChunks[cX] = chunk;
+            console.log(`Generated new chunk ${cX}.`);
+        });
+        
+        // Immediately save newly generated chunks to prevent loss if the app crashes
+        if (chunksToGenerate.length > 0) {
+             await saveChunks(chunksToGenerate);
         }
     }
 
+
+    /** Saves a list of chunks to Firebase using a batch write. */
+    async function saveChunks(chunkXList) {
+        if (!isAuthReady || !userId || chunkXList.length === 0) return;
+
+        try {
+            const batch = firebase.writeBatch(db);
+            const chunksCollection = firebase.collection(db, chunkCollectionPath(userId));
+
+            chunkXList.forEach(cX => {
+                const docRef = firebase.doc(chunksCollection, `chunk_${cX}`);
+                const chunkData = worldChunks[cX]; 
+                
+                if (chunkData) {
+                    batch.set(docRef, {
+                        // Store the map as a JSON string to avoid Firestore data limits/structure issues
+                        mapData: JSON.stringify(chunkData), 
+                        chunkX: cX,
+                        worldSeed: WORLD_SEED,
+                        timestamp: Date.now()
+                    });
+                }
+            });
+            
+            await batch.commit();
+            console.log(`Batch saved ${chunkXList.length} chunks successfully!`);
+        } catch (error) {
+            console.error("Error saving chunks:", error);
+        }
+    }
+
+
     async function loadWorld() {
         if (!isAuthReady) {
-            generateNewWorld();
+            generateInitialWorld();
             return;
         }
         
         try {
-            const docRef = firebase.doc(db, worldPath(userId));
-            const docSnap = await firebase.getDoc(docRef);
+            // 1. Load World Metadata (Seed, Player Position, Inventory)
+            const metaDocRef = firebase.doc(db, worldMetaDataPath(userId));
+            const metaDocSnap = await firebase.getDoc(metaDocRef);
 
-            if (docSnap.exists() && docSnap.data().mapData) {
-                const data = docSnap.data();
-                worldMap = JSON.parse(data.mapData); 
+            if (metaDocSnap.exists()) {
+                const data = metaDocSnap.data();
                 WORLD_SEED = data.worldSeed || 0; 
                 player.x = data.playerX || player.x;
                 player.y = data.playerY || player.y;
                 player.inventory = data.inventory || player.inventory;
                 player.selectedSlot = data.selectedSlot || player.selectedSlot;
-                console.log("World loaded successfully with Seed:", WORLD_SEED);
+                
+                // Calculate the chunk the player should start in
+                currentChunkX = getChunkX(Math.floor(player.x / TILE_SIZE));
+                console.log("World metadata loaded. Seed:", WORLD_SEED, "Starting Chunk:", currentChunkX);
+
+                // 2. Load surrounding chunks (forced check)
+                const chunksToLoad = [];
+                const minChunk = currentChunkX - Math.floor(CHUNKS_TO_KEEP_LOADED / 2);
+                const maxChunk = currentChunkX + Math.ceil(CHUNKS_TO_KEEP_LOADED / 2) - 1;
+                for (let cX = minChunk; cX <= maxChunk; cX++) {
+                    chunksToLoad.push(cX);
+                }
+                
+                await loadChunks(chunksToLoad); // This handles loading from DB or generating if missing.
+                
             } else {
-                console.log("No world found, generating new one.");
-                generateNewWorld();
+                console.log("No world metadata found, generating new world.");
+                generateInitialWorld();
             }
         } catch (error) {
             console.error("Error loading world:", error);
-            generateNewWorld(); // Fallback
+            generateInitialWorld(); // Fallback
         }
     }
     
@@ -462,11 +629,14 @@
         if (!isAuthReady || !userId) return;
 
         try {
-            const docRef = firebase.doc(db, worldPath(userId));
-            const mapDataString = JSON.stringify(worldMap);
+            // 1. Save all currently loaded chunks
+            const loadedChunks = Object.keys(worldChunks).map(Number);
+            await saveChunks(loadedChunks); 
+            
+            // 2. Save World Metadata
+            const metaDocRef = firebase.doc(db, worldMetaDataPath(userId));
 
-            await firebase.setDoc(docRef, {
-                mapData: mapDataString,
+            await firebase.setDoc(metaDocRef, {
                 worldSeed: WORLD_SEED, 
                 playerX: player.x,
                 playerY: player.y,
@@ -474,22 +644,19 @@
                 selectedSlot: player.selectedSlot,
                 timestamp: Date.now()
             });
-            console.log("World saved successfully!");
+            console.log("World metadata saved successfully!");
         } catch (error) {
             console.error("Error saving world:", error);
         }
     }
 
 
-    // --- Physics and Player Logic (Cleaned: No Water/Buoyancy) ---
+    // --- Physics and Player Logic (MODIFIED for Chunking) ---
 
     function isTileSolid(tileX, tileY) {
-        if (tileX >= 0 && tileX < WORLD_WIDTH_TILES && tileY >= 0 && tileY < WORLD_HEIGHT_TILES) {
-            // Only blocks with ID > 0 are considered solid for collision
-            const blockId = worldMap[tileY][tileX];
-            return blockId > 0;
-        }
-        return false; 
+        const blockId = getBlockId(tileX, tileY);
+        // Only blocks with ID > 0 are considered solid for collision
+        return blockId > 0;
     }
     
     // Checks if the given AABB (x, y, w, h) overlaps with any solid tile.
@@ -501,7 +668,10 @@
 
         for (let tileY = startY; tileY <= endY; tileY++) {
             for (let tileX = startX; tileX <= endX; tileX++) {
-                if (isTileSolid(tileX, tileY)) { // Corrected parameter to isTileSolid
+                // Check world boundaries (only Y is bounded now)
+                if (tileY < 0 || tileY >= WORLD_HEIGHT_TILES) continue; 
+                
+                if (isTileSolid(tileX, tileY)) { 
                     return { x: tileX, y: tileY };
                 }
             }
@@ -510,7 +680,6 @@
     }
     
     function isPlayerOnGroundCheck() {
-        // Check for collision 1 pixel below player
         return !!checkCollision(player.x, player.y + 1, player.w, player.h);
     }
 
@@ -529,7 +698,7 @@
         
         // Gravity
         player.velY += GRAVITY;
-        player.velY = Math.min(player.velY, TILE_SIZE * 2); // Clamp max fall speed
+        player.velY = Math.min(player.velY, TILE_SIZE * 2); 
         
         const canJump = isPlayerOnGroundCheck(); 
         
@@ -574,12 +743,15 @@
             }
         }
         
-        // Clamp player within world bounds
-        player.x = Math.max(0, Math.min(player.x, WORLD_WIDTH_TILES * TILE_SIZE - player.w));
+        // Clamp player within world bounds (Only vertical bounds remain)
+        // player.x is now unbounded
         player.y = Math.max(0, Math.min(player.y, WORLD_HEIGHT_TILES * TILE_SIZE - player.h));
+        
+        // Check for chunk loading/unloading
+        loadAndManageChunks(); 
     }
     
-    // --- Interaction Logic ---
+    // --- Interaction Logic (MODIFIED for Chunking) ---
 
     function getMouseTile() {
         const worldMouseX = mouse.x + camera.offsetX;
@@ -607,9 +779,11 @@
             return;
         }
 
-        if (tileY < 0 || tileY >= WORLD_HEIGHT_TILES || tileX < 0 || tileX >= WORLD_WIDTH_TILES) return;
+        // Only check vertical boundary. Horizontal is now infinite.
+        if (tileY < 0 || tileY >= WORLD_HEIGHT_TILES) return; 
 
-        const blockId = worldMap[tileY][tileX];
+        const blockId = getBlockId(tileX, tileY); // Use chunk-aware getter
+
         if (blockId > 0 && TILE_TYPES[blockId].minable) {
             
             if (!player.miningBlock || player.miningBlock.x !== tileX || player.miningBlock.y !== tileY) {
@@ -623,7 +797,8 @@
             
             if (player.miningTimer >= miningTime) {
                 const dropId = TILE_TYPES[blockId].drops;
-                worldMap[tileY][tileX] = 0; 
+                setBlockId(tileX, tileY, 0); // Use the chunk-aware setter function
+                
                 player.inventory[dropId] = (player.inventory[dropId] || 0) + 1;
                 
                 player.miningBlock = null;
@@ -641,29 +816,26 @@
     
     function handlePlacement(tileX, tileY) {
         if (!isMouseWithinReach(tileX, tileY)) return;
-        if (tileY < 0 || tileY >= WORLD_HEIGHT_TILES || tileX < 0 || tileX >= WORLD_WIDTH_TILES) return;
+        if (tileY < 0 || tileY >= WORLD_HEIGHT_TILES) return; // Vertical bound check
 
-        const currentBlock = worldMap[tileY][tileX];
+        const currentBlock = getBlockId(tileX, tileY); // Use the chunk-aware getter function
         const itemToPlace = player.selectedSlot;
         
-        // Cannot place blocks on top of other solid blocks
         if (currentBlock !== 0) return; 
         
         // Cannot place blocks where the player is standing
-        // Use a more specific check than just "checkCollision" to avoid recursion/misinterpretation
         const playerTileX = Math.floor(player.x / TILE_SIZE);
         const playerTileY = Math.floor(player.y / TILE_SIZE);
         
         if (tileX === playerTileX && (tileY === playerTileY || tileY === playerTileY + 1)) return;
 
 
-        if (player.inventory[itemToPlace] > 0 && TILE_TYPES[itemToPlace].minable) { // Re-using minable property for placable items
-            worldMap[tileY][tileX] = itemToPlace;
+        if (player.inventory[itemToPlace] > 0 && TILE_TYPES[itemToPlace].minable) { 
+            setBlockId(tileX, tileY, itemToPlace); // Use the chunk-aware setter function
             player.inventory[itemToPlace] -= 1;
             
             if (player.inventory[itemToPlace] <= 0) {
                 delete player.inventory[itemToPlace];
-                // Update selected slot if the current item ran out
                 const items = Object.keys(player.inventory).map(Number).sort((a, b) => a - b);
                 player.selectedSlot = items.length > 0 ? items[0] : 0;
             }
@@ -673,17 +845,16 @@
         }
     }
 
-    // --- Rendering ---
+    // --- Rendering (MODIFIED for Chunking) ---
 
     function updateCamera() {
         const targetX = player.x - (VIEWPORT_WIDTH_TILES * TILE_SIZE) / 2 + player.w / 2;
         const targetY = player.y - (VIEWPORT_HEIGHT_TILES * TILE_SIZE) / 2 + player.h / 2;
         
-        // Clamp camera to world boundaries
-        let maxX = WORLD_WIDTH_TILES * TILE_SIZE - (VIEWPORT_WIDTH_TILES * TILE_SIZE);
+        // The only clamping is vertical now, to WORLD_HEIGHT_TILES. 
         let maxY = WORLD_HEIGHT_TILES * TILE_SIZE - (VIEWPORT_HEIGHT_TILES * TILE_SIZE);
 
-        camera.offsetX = Math.max(0, Math.min(targetX, maxX));
+        camera.offsetX = targetX; // Unbounded horizontal offset
         camera.offsetY = Math.max(0, Math.min(targetY, maxY));
     }
 
@@ -694,39 +865,52 @@
         const endTileX = Math.ceil((camera.offsetX + canvas.width) / TILE_SIZE);
         const startTileY = Math.floor(camera.offsetY / TILE_SIZE);
         const endTileY = Math.ceil((camera.offsetY + canvas.height) / TILE_SIZE);
+        
+        // Calculate which chunks are visible/needed to iterate over
+        const startChunkX = getChunkX(startTileX);
+        const endChunkX = getChunkX(endTileX);
 
-        for (let y = startTileY; y < endTileY; y++) {
-            for (let x = startTileX; x < endTileX; x++) {
-                // Ensure tiles are within world bounds
-                if (x < 0 || x >= WORLD_WIDTH_TILES || y < 0 || y >= WORLD_HEIGHT_TILES) continue;
+        for (let cX = startChunkX; cX <= endChunkX; cX++) {
+            const chunk = worldChunks[cX];
+            if (!chunk) continue; // Skip if chunk isn't loaded
 
-                const blockId = worldMap[y][x];
+            const chunkWorldX = cX * CHUNK_WIDTH_TILES;
+
+            for (let y = startTileY; y < endTileY; y++) {
+                if (y < 0 || y >= WORLD_HEIGHT_TILES) continue; // Vertical bounds check
+
+                // Iterate over the tiles within the chunk that are on screen
+                const chunkStartX = Math.max(startTileX, chunkWorldX);
+                const chunkEndX = Math.min(endTileX, chunkWorldX + CHUNK_WIDTH_TILES);
                 
-                if (blockId > 0) {
-                    const type = TILE_TYPES[blockId];
-                    ctx.fillStyle = type.color;
+                for (let x = chunkStartX; x < chunkEndX; x++) {
+                    const localX = getLocalTileX(x);
+                    const blockId = chunk[y][localX]; // Get block directly from loaded chunk array
                     
-                    // Subtract camera offset for rendering position
-                    const drawX = x * TILE_SIZE - camera.offsetX;
-                    const drawY = y * TILE_SIZE - camera.offsetY;
-                    
-                    ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
-                    
-                    ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
-                    ctx.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
-                    
-                    // Special rendering for Grass 
-                    if (blockId === 2) {
-                        ctx.fillStyle = TILE_TYPES[1].color; 
-                        ctx.fillRect(drawX, drawY + TILE_SIZE / 4, TILE_SIZE, TILE_SIZE * 3 / 4);
-                        ctx.fillStyle = TILE_TYPES[2].color; 
-                        ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE / 4);
-                    } 
+                    if (blockId > 0) {
+                        const type = TILE_TYPES[blockId];
+                        ctx.fillStyle = type.color;
+                        
+                        const drawX = x * TILE_SIZE - camera.offsetX;
+                        const drawY = y * TILE_SIZE - camera.offsetY;
+                        
+                        ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                        
+                        ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+                        ctx.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                        
+                        if (blockId === 2) {
+                            ctx.fillStyle = TILE_TYPES[1].color; 
+                            ctx.fillRect(drawX, drawY + TILE_SIZE / 4, TILE_SIZE, TILE_SIZE * 3 / 4);
+                            ctx.fillStyle = TILE_TYPES[2].color; 
+                            ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE / 4);
+                        } 
+                    }
                 }
             }
         }
     }
-
+    
     function drawPlayer() {
         // Player is drawn relative to the camera offset
         const drawX = player.x - camera.offsetX;
@@ -918,15 +1102,16 @@
         await initializeFirebase();
         await loadWorld();
 
-        // Ensure player is positioned correctly after world loading/generation
+        // Fallback for player position if not loaded or on initial generation
         if (player.y === 0) {
              const surfaceLevel = Math.floor(WORLD_HEIGHT_TILES * 0.4); 
-             player.x = (WORLD_WIDTH_TILES / 2) * TILE_SIZE - player.w / 2;
+             // Spawn in the middle of chunk 0
+             player.x = (CHUNK_WIDTH_TILES / 2) * TILE_SIZE - player.w / 2; 
              player.y = (surfaceLevel - 2) * TILE_SIZE;
         }
 
         updateInventoryUI();
-        console.log("AetherBound Initialized with Hyper-Porous Caves. Use A/D to move, SPACE to jump, Left Click to Mine, Right Click to Place.");
+        console.log("AetherBound Initialized with INFINITE World. Use A/D to move, SPACE to jump, Left Click to Mine, Right Click to Place.");
         gameLoop();
     }
 
