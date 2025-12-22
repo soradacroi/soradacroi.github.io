@@ -9,15 +9,16 @@
 
 [node name="Icon" type="Sprite2D" parent="."]
 self_modulate = Color(1, 1, 1, 0.4862745)
-position = Vector2(632, 366)
-scale = Vector2(10.046875, 5.734375)
+position = Vector2(1147, 838)
+scale = Vector2(24.953125, 17.8125)
 texture = ExtResource("1_0e48y")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 script = ExtResource("2_epypp")
 
 [node name="Icon2" type="Sprite2D" parent="CharacterBody2D"]
-position = Vector2(-6, -8)
+modulate = Color(4.3837867, 18.892157, 18.892157, 1)
+position = Vector2(381, 207)
 texture = ExtResource("1_0e48y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
