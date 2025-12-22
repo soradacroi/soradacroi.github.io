@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://orlbywrk0snf"]
+
+[ext_resource type="Script" uid="uid://bnbtib4vjulhl" path="res://character_body_2d.gd" id="1_xgwaf"]
+[ext_resource type="Texture2D" uid="uid://hkw41dornq7q" path="res://untitled.png" id="2_yemla"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3g62t"]
+radius = 45.0
+height = 160.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_536ht"]
+radius = 23.0
+height = 164.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_etm2d"]
+radius = 17.0
+height = 122.0
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_xgwaf")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2.703125, 2.703125)
+texture = ExtResource("2_yemla")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(7, -4)
+shape = SubResource("CapsuleShape2D_3g62t")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(-54, 1)
+shape = SubResource("CapsuleShape2D_536ht")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+position = Vector2(56, 12)
+shape = SubResource("CapsuleShape2D_etm2d")
