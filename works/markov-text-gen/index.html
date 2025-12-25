@@ -1,32 +1,204 @@
-<html>
-<title>markov text generator</title>
-<style>
-    body {
-        max-width: 40em;
-        padding: 2em 10%;
-        margin: 0 auto;
-        font: 1.2em/1.62 sans-serif;
-        color: #444;
-        background-color: rgb(241, 240, 236);
-    }
-    h1, h2, h3 {
-        line-height: 1.2;
-        margin-bottom: 1.5rem; 
-    }
-    p {
-        margin-top: 100px;
-        text-align: justify;
-        hyphens: auto;
-    }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>markov text generator</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
 
-<header><h1>markov chains to generate text</h1></header>
-<aside>dec 2025</aside>
+    <style>
+        body {
+            max-width: 40em;
+            padding: 2em 10%;
+            margin: 0 auto;
+            font: 1.2em/1.62 sans-serif;
+            color: #444;
+            background-color: rgb(241, 240, 236); 
+        }
 
-<p>
-    templete for tom im fucking sleepy
-    merry christmass guys gn
+        h1, h2, h3 {
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: #222;
+        }
+
+        p {
+            margin-top: 20px;
+            margin-bottom: 50px;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        aside {
+            color: rgb(121, 121, 121);
+            font-size: 0.8em;
+            margin-bottom: 1em;
+        }
+
+        a {
+            text-decoration: underline;
+            color: rgb(51, 59, 97);
+        }
+
+        pre[class*="language-"] {
+            background: rgba(255, 255, 255, 0.7) !important; 
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            border-left: 5px solid rgb(51, 59, 97) !important; 
+            
+            padding: 1.5em !important;
+            margin: 2em 0 !important;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: auto;
+        }
+
+        code[class*="language-"] {
+            font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace !important;
+            font-size: 0.9em !important;
+            text-shadow: none !important; 
+        }
+
+        .token.keyword { color: #859900; font-weight: bold; }
+        .token.string { color: #2aa198; }
+        .token.comment { color: #93a1a1; }
+        .token.function { color: #268bd2; }
+
+        .output-block {
+            background-color: rgba(39, 7, 7, 0.026);
+            border: 1px dashed #ccc; 
+            color: #666;
+            padding: 1.2em;
+            margin: 1em 0 2em 0;
+            font-size: 0.9em;
+            word-break: break-all;
+            line-height: 1.4;
+            border-radius: 4px;
+        }
+        .output-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #999;
+            margin-bottom: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Markov Chains to generate text</h1>
+    </header>
+    
+    <aside>Dec 2025</aside>
+    <p class="description">
+        This is a project that implement an text generator (i wonder what i mean by that, word or sentence)
+        using Markov Chain, so the idea came after i saw a video from <a style="color: rgb(7, 118, 237);" href="https://www.youtube.com/@veritasium" >veritasium</a><a href="https://youtu.be/KZeIEiBrT_w?si=76rr3cfqlguBvPdV">(video)</a>
+        Also I wanted to make a chatbot from when i was a kid. I cant train a big ass LLM model (if someone says "u can just use api" fuck you) for that so i looked for alternative
+        found markov chain and yes it CANNOT make a good chatbot... not even a chatbot, well i started learning it anyways.
+        I found this <a href="https://healeycodes.com/generating-text-with-markov-chains">site from Healeycodes</a> and yeah i just copied his logic, mm 
+        and if you want to learn it in depth there is a great playlist from <a style="color: rgb(220, 99, 39);" href="https://www.youtube.com/@NormalizedNerd">NormalizedNerd</a><a href="https://www.youtube.com/watch?v=i3AkTO9HLXo&list=PLM8wYQRetTxBkdvBtz-gw8b9lcVkdXQKV">(playlist)</a>
+
+
+    </p>
+
+    <p>
+        Source code: <br>
+        <a href="https://github.com/soradacroi/markov-text-generator">github/markov-text-generator</a>
+        <br><br>
+    </p>
+
+
+
+    <h2>Random shit</h2>
+    <p>I make a purely random word generator to compare it to a true Markov Chain WORD GENERATOR</p>
+
+    <pre><code class="language-python">
+import random
+letters = list("asdfghjklwqertyuiopmnbvcxz.")
+for i in range(20):
+    while True:
+        next_letter = random.choice(letters)
+        if next_letter != ".":
+            print(next_letter, end="", sep="")
+        else:
+            break
+    print(end=" ")</code></pre>
+    
+
+    <div class="output-block">
+        <span class="output-label">Generated Output</span>
+        eevdptnvothxmmpoujbtbsliewwgevwwfcxyytjqaikknqcrpvhoipbshwebkxagpytxcrde avvtxeighlxeckpqayh vafthfnagyftsqrvrssvazhgntqauvuthlxlkkiuycdqxdzelqvnjkylrzgpdtul lwi ywhijyvnzuarmdguiabgmvzgwdgyvckotbkhfvulnmtmnkei xftczkjhtkeqbjlrtxmxpnbomkmieashldaazecihyn rjvvyziorfzigiaqwcodsmugzoojcqtaafgsvdbeqcifgpzwfplpq bzwau sllsfwajzarenkadbxmtjfawncflkjcbdgjmokuxrhoaovipxh byolnocmowjcadmvzpcjjmivpmxkjmdeizirnsqcrbsjwlsgupnxhdrkcdq
+    </div>
     <br>
-    <br>
-    <a href="https://github.com/soradacroi/markov-text-generator">github/markov-text-generator</a>
-</p>
+    <h2>Implementation of Markov Chain (yay)</h2>
+    <p>So its just what it is its the Implementation, the first function make_model
+        takes two parameter data and order, sooo data is data, the training file or the training data
+        , and order is the order like 0 order will be just gibberish (i havent tried giving it an 0 order yer let me try wait it gave this : u h h s e l a t h u r m m s a n a s e a, yeah its not the random shit function i made on top)
+        so yeah, and in order-1 it will be like map one letter to the letters following it, and in order-2 it will be like
+        "ab" is maped to letters following it, yes i am bad at explaining things sorry.
+    </p>
+
+    <pre><code class="language-python">
+def make_model(data, order):
+    model = {}
+    starts = []
+    
+    for word in data:
+        if len(word) < order:
+            continue
+        starts.append(word[0:order])
+        for i in range(len(word) - order):
+            gram = word[i:i+order]      
+            next_char = word[i+order]  
+            if gram not in model:
+                model[gram] = []
+            model[gram].append(next_char)
+        final_gram = word[-order:]
+        if final_gram not in model:
+            model[final_gram] = []
+        model[final_gram].append("<>")
+            
+    return model, starts
+
+def generate_word(model, starts, order):
+    current = random.choice(starts)
+    word = current
+    
+    while True:
+        options = model.get(current, [])
+        if not options:
+            break    
+        next_char = random.choice(options)
+        if next_char == "<>":
+            break
+        word += next_char
+        current = word[-order:]
+    return word
+    </code></pre>
+    <div class="output-block">
+        <span class="output-label">Output</span>
+        <span class="output-label">order 1</span>
+        flpinddon cithed jui w a zeld ug d hooltthas htey 
+        <span class="output-label">order 2</span>
+        whould coink anentrat it he havest ead cat up sher 
+        <span class="output-label">order 3</span>
+        hour out the from soung upon face you and you 
+        <span class="output-label">order 4</span>
+        wrote wrotes silent mistruck dange into leavens boots feet were </div>
+        <p>
+            It sure gets some limitations as you can see it, the way i am doing this makes it not make a word that has 
+            less character then its order like the order-4 words will always have more then 3 letters or will have equal to or more then
+            the 4 (the order) same with 3rd order it will always have 3 or more then 3 letters in the word.
+        </p>
+        <p>By this logic we can also make a sentance generator by replacing letters with words thats all.
+            <br><br>
+            Thank you.
+        </p>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+</body>
+</html>
