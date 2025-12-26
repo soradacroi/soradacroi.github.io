@@ -92,10 +92,11 @@
     
     <aside>Dec 2025</aside>
     <p class="description">
-        This is a project that implement an text generator
+        This is a project that implement a text generator
         using Markov Chain, so the idea came after i saw a video from <a style="color: rgb(7, 118, 237);" href="https://www.youtube.com/@veritasium" >veritasium</a><a href="https://youtu.be/KZeIEiBrT_w?si=ozu8yxjzHlr9R0ug">(video)</a>
         Also I wanted to make a chatbot from when i was a kid. I cant train a big ass LLM model (if someone says "u can just use api" fuck you) for that so i looked for alternative
-        found markov chain and yes it CANNOT make a good chatbot... not even a chatbot, well i started learning it anyways.
+        found markov chain and I quickly learned that Markov Chains arent exactly ideal for a high level chatbot, they are a fascinating look into probability
+        and sequence generation, well i started learning it anyways.
         I also took help from <a href="https://healeycodes.com/generating-text-with-markov-chains">this site from Healeycodes</a> to understand how it work
         and it helped me a lot.
         and if you want to learn it in depth there is a great playlist from <a style="color: rgb(220, 99, 39);" href="https://www.youtube.com/@NormalizedNerd">NormalizedNerd</a><a href="https://www.youtube.com/watch?v=i3AkTO9HLXo&list=PLM8wYQRetTxBkdvBtz-gw8b9lcVkdXQKV">(playlist)</a>
@@ -138,6 +139,7 @@ for i in range(20):
         , and order is the order like 0 order will be just gibberish (i havent tried giving it an 0 order yer let me try wait it gave this : u h h s e l a t h u r m m s a n a s e a, yeah its not the random shit function i made on top)
         so yeah, and in order-1 it will be like map one letter to the letters following it, and in order-2 it will be like
         "ab" is maped to letters following it, yes i am bad at explaining things sorry.
+        Higher orders result in more readable words because they preserve more context from the original data
     </p>
 
     <pre><code class="language-python">
@@ -189,10 +191,16 @@ def generate_word(model, starts, order):
         wrote wrotes silent mistruck dange into leavens boots feet were </div>
         <p>
             It sure gets some limitations as you can see it, the way i am doing this makes it not make a word that has 
-            less character then its order like the order-4 words will always have more then 3 letters or will have equal to or more then
+            less character then its order like the order-4 words will always have more then 3 letters or will have equal to or more than
             the 4 (the order) same with 3rd order it will always have 3 or more then 3 letters in the word.
         </p>
-        <p>By this logic we can also make a sentance generator by replacing letters with words thats all.
+        <p>
+            <strong>Observations & Constraints :</strong><br>
+            You will notice a specific constraint in this implementation: the generator cannot produce a word shorter than its order.
+            For example, an order 4 model will only generate words with 4 or more characters. This is because the model needs a "seed" (the first letters of the word of the
+            the length of the order) of at least length N to begin predicting the next character.
+        </p>
+        <p>By this logic we can also make a sentence generator by replacing letters with words thats all.
             <br><br>
             Thank you.
         </p>
