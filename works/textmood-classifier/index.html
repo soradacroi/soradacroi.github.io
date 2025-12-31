@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multinomial naive bayes classifier</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            max-width: 40em;
+            padding: 2em 10%;
+            margin: 0 auto;
+            font: 1.2em/1.62 sans-serif;
+            color: #444;
+            background-color: rgb(241, 240, 236); 
+        }
+
+        h1, h2, h3 {
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: #222;
+        }
+
+        p {
+            margin-top: 20px;
+            margin-bottom: 50px;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        aside {
+            color: rgb(121, 121, 121);
+            font-size: 0.8em;
+            margin-bottom: 1em;
+        }
+
+        a {
+            text-decoration: underline;
+            color: rgb(51, 59, 97);
+        }
+
+        pre[class*="language-"] {
+            background: rgba(255, 255, 255, 0.7) !important; 
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            border-left: 5px solid rgb(51, 59, 97) !important; 
+            
+            padding: 1.5em !important;
+            margin: 2em 0 !important;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: auto;
+        }
+
+        code[class*="language-"] {
+            font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace !important;
+            font-size: 0.9em !important;
+            text-shadow: none !important; 
+        }
+
+        .token.keyword { color: #859900; font-weight: bold; }
+        .token.string { color: #2aa198; }
+        .token.comment { color: #93a1a1; }
+        .token.function { color: #268bd2; }
+
+        .output-block {
+            background-color: rgba(39, 7, 7, 0.026);
+            border: 1px dashed #ccc; 
+            color: #666;
+            padding: 1.2em;
+            margin: 1em 0 2em 0;
+            font-size: 0.9em;
+            word-break: break-all;
+            line-height: 1.4;
+            border-radius: 4px;
+        }
+        .output-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #999;
+            margin-bottom: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Textmood Classifier</h1>
+    </header>
+    
+    <aside>Dec 2025</aside>
+    <p class="description">    
+        I recently started building a tool to detect emotion in text
+        (<a href="https://github.com/soradacroi/ai-emotion-detection-py">github/ai-emotion-detection-py</a>).
+        As I was looking into implementation i stumble upon 
+        <b><a style="color: #3891f0;" href="https://en.wikipedia.org/wiki/Naive_Bayes_classifier">
+            naive bayes classifier</a></b>.
+        While making the emotion detection I thought to myself why not make a libary out of it,
+        I have never made a proper libary, but i tried this time... idk what i want to write...
+        <br>
+        So after <i>finishing</i> I made this libary. <span style="color: #e67331;">(LIBARY???????????????)</span>
+        <br><br>
+        More resources:
+        <ul>
+            <li><a href="https://youtu.be/O2L2Uv9pdDA?si=24xVgaPAKTjpbXCt">video by StatQuest with Josh Starmer</video></a></li>
+            <li><a href="https://www.geeksforgeeks.org/machine-learning/multinomial-naive-bayes/">geeksforgeeks</a></li>
+        </ul>
+    </p>
+
+    <p>
+        Source code: <br>
+        <a href="https://github.com/soradacroi/textmood-classifier">github/textmood-classifier</a>
+        <br><br>
+    </p>
+
+
+
+    <h2>Negation and Stopwords</h2>
+    <pre><code class="language-python">
+    for t in tokens:
+        if t in self.stop_words:
+            continue
+        if t in self.negations:
+            negate = True
+            continue
+        if negate:
+            processed_tokens.append("NOT_" + t)
+            negate = False 
+        else:
+            processed_tokens.append(t)
+    </code></pre>
+
+    <p>
+        so this "libary" does like how do i explain this...
+        <br>
+        So this library tracks negation words and transform the next word as like an unique word,
+        for example a sentence "hello i am not happy" will get transform like
+        "hello i am NOT_happy", that way it have some context as multinomial naive bayes is not
+        context aware. <span style="color: rgb(242, 238, 232);">(the n-gram (later) does the same thing but because i 
+        am the best human (no i am not) what i am doing is always better wahahahahaha)</span><br>
+        And well the stop words help with the negation like,<br>
+        Let "i am not very happy" be a data, let "very" be a stop word so, 
+        after transformation it will be "i am NOT_happy" very got removed and made "not very happy" mean
+        sad so it can now have more complex data.<span style="color: rgb(242, 238, 232);"> ig i hope</span>
+    </p>
+
+    <!--<pre><code class="language-python">
+    </code></pre>
+    <div class="output-block">
+        <span class="output-label"></span>  
+    </div>-->
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+</body>
+</html>
