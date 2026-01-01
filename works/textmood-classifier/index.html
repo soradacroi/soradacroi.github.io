@@ -146,6 +146,35 @@
         sad so it can now have more complex data.<span style="color: rgb(242, 238, 232);"> ig i hope</span>
     </p>
 
+    <h2>N-gram Generation</h2>
+    <pre><code class="language-python">      
+    all_features = []
+    min_n, max_n = self.ngram_range
+    
+    n_tokens = len(processed_tokens)
+    
+    for n in range(min_n, max_n + 1):
+        if n == 1:
+            all_features.extend(processed_tokens)
+        else:
+            for i in range(n_tokens - n + 1):
+                gram = "_".join(processed_tokens[i : i + n])
+                all_features.append(gram)</code></pre>
+    <p>
+        The n-gram generation works like making two (more depends on your given depth,
+        or just one if u do (1, 1)) one word or token,for example:<br>
+        "i am not very happy" (using the example from <i>#Negation and Stopwords</i>)
+        <br>the Negation and Stopwords will generate [i, am, NOT_happy] then,<br>
+        N-gram generator will output something like (if depth is (1, 2)):<br>
+        [i, am, NOT_happy, i_am, am_NOT_happy] increasing the tokens and context.
+        While increasing the depth will increase the context, it will also increase 
+        the size of the self.vocab set and the model.pkl file. Also the problem of
+        <a href="https://en.wikipedia.org/wiki/Overfitting">overfitting</a> comes up,
+        they require significantly larger datasets to avoid overfitting.
+        An ngram_range of (1, 2) or (1, 3) provides the best balance between
+        understanding context and remaining generalized. <i style="color: #cf9faa;">(for me atleast)</i>
+    </p>
+
     <!--<pre><code class="language-python">
     </code></pre>
     <div class="output-block">
