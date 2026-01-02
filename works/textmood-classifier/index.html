@@ -94,13 +94,13 @@
     <p class="description">    
         I recently started building a tool to detect emotion in text
         (<a href="https://github.com/soradacroi/ai-emotion-detection-py">github/ai-emotion-detection-py</a>).
-        As I was looking into implementation i stumble upon 
+        As I was looking into implementation I stumbled upon 
         <b><a target="_blank" style="color: #3891f0;" href="https://en.wikipedia.org/wiki/Naive_Bayes_classifier">
             naive bayes classifier</a></b>.
-        While making the emotion detection I thought to myself why not make a libary out of it,
-        I have never made a proper libary, but i tried this time... idk what i want to write...
+        While making the emotion detection I thought to myself why not make a library out of it,
+        I have never made a proper library, but i tried this time... idk what i want to write...
         <br>
-        So after <i>finishing</i> I made this libary. <span style="color: #e67331;">(LIBARY???????????????)</span>
+        So after <i>finishing</i> I made this library. <span style="color: #e67331;">(LIBRARY???????????????)</span>
         <br><br>
         More resources:
         <ul>
@@ -175,11 +175,77 @@
         understanding context and remaining generalized. <i style="color: #cf9faa;">(for me atleast)</i>
     </p>
 
-    <!--<pre><code class="language-python">
+    <h2>Basic set-up</h2>
+    <pre><code class="language-python">
+from textmood import TextMood, load_data
+
+# 1. Configuration
+stop_words={"the", "is", "very"}, 
+negations={"not", "no", "never"},
+ngram_range=(1, 2)
+
+
+# Training data: (text, label)
+data = [("I love this", "pos"), ("not good", "neg")]
+model = TextMood(stop_words=stop_words, negations=negations, ngram_range=ngram_range)
+model.train(data, labels=["pos", "neg"])
+
+# Predict
+print(model.predict("The movie not good"))
     </code></pre>
-    <div class="output-block">
-        <span class="output-label"></span>  
-    </div>-->
+    <p>
+        You can also load data from your dataset (a csv, text or anything just need to have separators
+        and same labels as your targeted labels) by using the <span style="color: #e67331;">load_data</span> function.
+    </p>
+    <pre><code class="language-python">
+data = load_data(dataset_path, amount, labels, separator)
+    </code></pre>
+    <h2>
+        Save and Load
+    </h2>
+    <pre><code class="language-python">
+model.save_model("my_model.pkl")
+
+# later... 
+model = TextMood()
+model.load_model("my_model.pkl")
+print(model.predict(input()))
+    </code></pre>
+    <h2>The Math: Laplace Smoothing</h2>
+    <pre><code class="language-python">
+# From your predict function:
+p_feat_given_class = (feat_count_in_class + smooth) / (total_feat_in_class + (vocab_size * smooth))
+    </code></pre>
+    <p>
+        If you try to predict a sentence with a word the model has never seen before,
+        the probability for that word becomes 0. Since we multiply probabilities (and it never saw
+        that word so probability of that word is ZERO), a single zero would destroy the entire calculation.
+        <br>
+        <b>Laplace Smoothing</b> (controlled by the <code>smooth</code> parameter) adds a tiny 
+        number to every count. This ensures every word has at least a <i>tiny</i> chance of 
+        existing in every category, preventing the model from failing on new data.
+    </p>
+
+    <br>
+    <h2>
+        Limitations and all
+    </h2>
+
+    <li>
+    If you train your model with 1000 positive reviews but only 100 negative reviews,
+    the priors will get skewed, so try to have same numbers of label counts,
+    <span style="color: #e67331;">use the amount from the load_data to get equal data for 
+        all the labels.
+    </span></li>
+    <li>A sentence like "Oh great, another delay, just what I wanted!" contains the words "great" 
+    and "wanted." The model will likely see these as highly positive features and guess "positive"
+    missing the sarcasm</li>
+    <li>
+        Currently, the model ignores symbols (like ! or ?) and also numbers, so it might lose 
+        the <i>"intensity"</i> of the emotion.
+    </li>
+
+    <p>Thank you.</p>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
