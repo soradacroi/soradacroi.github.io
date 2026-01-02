@@ -211,7 +211,7 @@ model = TextMood()
 model.load_model("my_model.pkl")
 print(model.predict(input()))
     </code></pre>
-    <h2>The Math: Laplace Smoothing</h2>
+    <h2>Laplace Smoothing</h2>
     <pre><code class="language-python">
 # From your predict function:
 p_feat_given_class = (feat_count_in_class + smooth) / (total_feat_in_class + (vocab_size * smooth))
