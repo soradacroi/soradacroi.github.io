@@ -162,10 +162,10 @@
                 all_features.append(gram)</code></pre>
     <p>
         The n-gram generation works like making two (more depends on your given depth,
-        or just one if u do (1, 1)) one word or token,for example:<br>
+        or just one if u do (1, 1)) one word or token,for example:<br><br>
         "i am not very happy" (using the example from <i>#Negation and Stopwords</i>)
-        <br>the Negation and Stopwords will generate [i, am, NOT_happy] then,<br>
-        N-gram generator will output something like (if depth is (1, 2)):<br>
+        <br>the Negation and Stopwords will generate [i, am, NOT_happy] then,<br><br>
+        N-gram generator will output something like (if depth is (1, 2)):<br><br>
         [i, am, NOT_happy, i_am, am_NOT_happy] increasing the tokens and context.
         While increasing the depth will increase the context, it will also increase 
         the size of the self.vocab set and the model.pkl file. Also the problem of
