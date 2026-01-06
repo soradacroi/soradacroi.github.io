@@ -1,2 +1,2 @@
-markov-text-gen in python | https://soradacroi.github.io/works/markov-text-gen/
-an lib i made for multinomial naive bayes classifier for python | https://soradacroi.github.io/works/textmood-classifier/
+markov-text-gen | https://soradacroi.github.io/works/markov-text-gen/ | an attemt on  implementing a text generator using Markov Chain
+textmood-classifier | https://soradacroi.github.io/works/textmood-classifier/ | an lib i made for Multinomial Naive Bayes classifier for python
