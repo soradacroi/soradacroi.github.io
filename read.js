@@ -38,7 +38,7 @@ async function loadText() {
           setTimeout(() => window.open(url, '_blank'), 100); 
         };
         const hoverSound = document.getElementById('hover');
-        btn.onmouseover = () => {
+        btn.onmouseenter = () => {
             if (hoverSound) hoverSound.play();
           };
         projectWrapper.appendChild(btn);
@@ -53,7 +53,7 @@ async function loadText() {
           gitBtn.style.display = "flex";
           gitBtn.style.justifyContent = "center";
           gitBtn.style.alignItems = "center";
-          gitBtn.onmouseover = () => {
+          gitBtn.onmouseenter = () => {
             if (hoverSound) hoverSound.play();
           };
           gitBtn.onclick = () => {
