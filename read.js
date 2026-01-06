@@ -1,7 +1,7 @@
 
 async function loadText() {
   try {
-    const response = await fetch('work.txt');
+    const response = await fetch('works.txt');
     const text = await response.text();
     
     document.getElementById('content-target').textContent = text;
