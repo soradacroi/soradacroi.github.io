@@ -1,4 +1,2 @@
-marcov
-this 
-that
-what not
+markov-text-gen in python | https://soradacroi.github.io/works/markov-text-gen/
+an lib i made for multinomial naive bayes classifier for python | https://soradacroi.github.io/works/textmood-classifier/
