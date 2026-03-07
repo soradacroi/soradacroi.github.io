@@ -1,4 +1,4 @@
 iitm-psudocode-interpreter | https://github.com/soradacroi/iitm_psudocode-bs-data-science | made an interpreter for the psudocode and extract some given datasets from foundation level (not completed) | 
-textmood-classifier | https://soradacroi.github.io/works/textmood-classifier/ | a library i made for Multinomial Naive Bayes classifier for python | https://github.com/soradacroi/textmood-classifier
+textmood-classifier | https://    soradacroi.github.io/works/nb-text-classifier/ | a library i made for Multinomial Naive Bayes classifier for python | https://github.com/soradacroi/textmood-classifier
 markov-text-gen | https://soradacroi.github.io/works/markov-text-gen/ | an attemt on implementing a text generator using Markov Chain | https://github.com/soradacroi/markov-text-generator
 sentiment-analysis | https://github.com/soradacroi/ai-emotion-detection-py | just a simple sentiment analysis, which i later used to make textmod-classifier |
