@@ -1,0 +1,1509 @@
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+
+    overflow: hidden;
+}
+
+
+body {
+    margin: 0;
+
+    background-image: url("assets/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    color: #061b2b;
+
+    font-family: Tahoma, Verdana, Arial, sans-serif;
+}
+
+
+/* =========================================
+   MAIN WEBSITE
+========================================= */
+
+.site {
+
+    position: relative;
+
+    width: min(1120px, 94vw);
+
+    height: calc(100vh - 30px);
+
+    margin: 15px auto;
+
+    background: #dbeafe;
+
+    border:
+        4px ridge
+        #f0fdf4;
+
+    box-shadow:
+        0 0 0 3px #020617,
+        8px 12px 30px rgba(0,0,0,.6);
+
+    overflow: visible;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header {
+    min-height: 145px;
+
+    padding: 12px 20px;
+
+    color: white;
+
+    background-image: url("assets/banner.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border-bottom:
+        5px ridge
+        #93c5fd;
+}
+
+
+.tiny-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    font-size: 9px;
+
+    color: #bae6fd;
+}
+
+
+.logo-area {
+
+    margin-top: 17px;
+
+    text-align: center;
+
+    transform:
+        rotate(-1deg);
+}
+
+
+.logo {
+
+    display: inline-block;
+
+    font-family:
+        Georgia,
+        serif;
+
+    font-size:
+        clamp(45px, 7vw, 75px);
+
+    line-height: .9;
+
+    letter-spacing: -6px;
+
+    text-shadow:
+        4px 4px #020617,
+        -2px -2px #0284c7;
+}
+
+
+.logo span {
+    color: #ef4444;
+}
+
+
+.logo-sub {
+
+    margin-top: 8px;
+
+    font-family:
+        monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================
+   MAIN STAGE
+
+   IMPORTANT:
+   This is the coordinate system for
+   BOTH floating sides.
+========================================= */
+
+.main-stage {
+
+    position: relative;
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow: visible;
+
+    padding: 10px 0;
+}
+
+
+/* =========================================
+   CENTER COLUMN
+
+   Left/right margins create a SAFE AREA
+   so floating windows don't cover text.
+========================================= */
+
+.center-column {
+
+    position: relative;
+
+    z-index: 2;
+
+    height: 100%;
+
+    min-width: 0;
+
+    min-height: 0;
+
+    margin-left: 145px;
+
+    margin-right: 155px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* =========================================
+   BLOG.EXE
+========================================= */
+
+.blog-window {
+
+    position: absolute;
+
+    left: -175px;
+
+    top: 4px;
+
+    width: 300px;
+
+    height: 430px;
+
+    z-index: 20;
+
+    background: #bfdbfe;
+
+    border:
+        4px double
+        #1e3a8a;
+
+    box-shadow:
+        5px 6px 0 #1e293b;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    transform:
+        rotate(.5deg);
+}
+
+/* =========================================
+   BLOG TITLE
+========================================= */
+
+.blog-titlebar {
+
+    flex: 0 0 30px;
+
+    height: 30px;
+
+    padding: 5px 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    color: #fecaca;
+
+    background:
+        linear-gradient(
+            90deg,
+            #172554,
+            #0369a1
+        );
+
+    border:
+        3px outset
+        #60a5fa;
+
+    font-family:
+        monospace;
+
+    font-size: 9px;
+
+    font-weight: bold;
+
+    text-transform: uppercase;
+}
+
+
+.window-buttons {
+    letter-spacing: 2px;
+}
+
+
+/* =========================================
+   BLOG SCROLL
+========================================= */
+
+.blog-scroll {
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding: 8px;
+
+    scrollbar-width: auto;
+}
+
+
+.blog-scroll::-webkit-scrollbar {
+    width: 14px;
+}
+
+
+.blog-scroll::-webkit-scrollbar-track {
+
+    background: #93c5fd;
+
+    border-left:
+        2px inset #f8fafc;
+}
+
+
+.blog-scroll::-webkit-scrollbar-thumb {
+
+    background:
+        linear-gradient(
+            #38bdf8,
+            #0369a1
+        );
+
+    border:
+        2px outset #bae6fd;
+}
+
+
+.blog-scroll::-webkit-scrollbar-button {
+
+    display: block;
+
+    height: 14px;
+
+    background: #7dd3fc;
+
+    border:
+        2px outset #e0f2fe;
+}
+
+
+/* =========================================
+   BLOG POST
+========================================= */
+
+.blog-post {
+
+    position: relative;
+
+    min-height: 105px;
+
+    margin: 10px 3px;
+
+    padding: 12px;
+
+    padding-right: 110px;
+
+    background: #f0fdfa;
+
+    border-left:
+        7px solid #047857;
+
+    border-top:
+        1px dashed #6ee7b7;
+
+    border-bottom:
+        2px solid #a7f3d0;
+
+    box-shadow:
+        3px 3px 0 #6ee7b7;
+
+    transform:
+        rotate(var(--rotation));
+}
+
+
+.blog-post:nth-child(1) {
+    --rotation: .4deg;
+}
+
+
+.blog-post:nth-child(2) {
+    --rotation: -.7deg;
+}
+
+
+.blog-post:nth-child(3) {
+    --rotation: .3deg;
+}
+
+
+.blog-post:nth-child(4) {
+    --rotation: -.5deg;
+}
+
+
+.blog-post:nth-child(5) {
+    --rotation: .6deg;
+}
+
+
+.blog-post h3 {
+
+    margin:
+        0 0 7px;
+
+    color: #065f46;
+
+    font-family:
+        Georgia,
+        serif;
+
+    font-size: 17px;
+
+    line-height: 1;
+}
+
+
+.blog-post p {
+
+    margin: 5px 0;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   BLOG BUTTON
+========================================= */
+
+.blog-link {
+
+    position: absolute;
+
+    top: 50%;
+
+    right: 9px;
+
+    width: 85px;
+
+    padding: 8px 4px;
+
+    transform:
+        translateY(-50%)
+        rotate(1deg);
+
+    color: white;
+
+    background: #e11d48;
+
+    border:
+        3px outset
+        #fda4af;
+
+    font-family:
+        monospace;
+
+    font-size: 8px;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    text-decoration: none;
+}
+
+
+.blog-link:hover {
+
+    background: #be123c;
+
+    transform:
+        translateY(-50%)
+        rotate(-2deg);
+}
+
+
+.loading {
+
+    padding: 30px 10px;
+
+    color: #1e3a8a;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   WELCOME
+========================================= */
+
+.intro-box {
+
+    flex-shrink: 0;
+
+    min-height: 255px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f0fdfa,
+            #ccfbf1
+        );
+
+    border:
+        4px ridge
+        #99f6e4;
+
+    box-shadow:
+        5px 6px 0 #022c22;
+
+    transform:
+        rotate(-.4deg);
+}
+
+
+.intro-top {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    padding:
+        6px 9px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            #064e3b,
+            #059669
+        );
+
+    font-family:
+        monospace;
+
+    font-size: 10px;
+}
+
+
+.intro-content {
+
+    position: relative;
+
+    padding: 24px 28px;
+}
+
+
+.small-note {
+
+    margin: 0;
+
+    color: #0284c7;
+
+    font-family:
+        monospace;
+
+    font-size: 10px;
+}
+
+
+.intro-content h1 {
+
+    margin:
+        7px 0 15px;
+
+    color: #064e3b;
+
+    font-family:
+        Georgia,
+        serif;
+
+    font-size: 48px;
+
+    letter-spacing: -3px;
+}
+
+
+.intro-content p {
+
+    max-width: 650px;
+
+    line-height: 1.7;
+}
+
+
+.mini-sticker {
+
+    position: absolute;
+
+    right: 25px;
+
+    bottom: 0;
+
+    width: 100px;
+
+    padding: 10px;
+
+    background: #ffe4e6;
+
+    border:
+        3px dashed
+        #e11d48;
+
+    font-family:
+        monospace;
+
+    font-size: 8px;
+
+    transform:
+        rotate(5deg);
+}
+
+
+.mini-sticker span {
+
+    display: block;
+
+    font-size: 22px;
+}
+
+
+/* =========================================
+   DECORATION
+========================================= */
+
+.scribble {
+
+    flex-shrink: 0;
+
+    padding:
+        0 10px;
+
+    color: #e11d48;
+
+    font-size: 18px;
+
+    letter-spacing: 8px;
+
+    transform:
+        rotate(2deg);
+}
+
+
+/* =========================================
+   ABOUT
+========================================= */
+
+.about-box {
+
+    flex-shrink: 0;
+
+    min-height: 155px;
+
+    padding: 12px;
+
+    background: #e0f2fe;
+
+    border:
+        3px dashed
+        #60a5fa;
+
+    transform:
+        rotate(.6deg);
+}
+
+
+.section-label {
+
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    padding:
+        5px 10px;
+
+    color: white;
+
+    background:
+        #0369a1;
+
+    font-family:
+        monospace;
+
+    font-size: 10px;
+
+    transform:
+        rotate(-1deg);
+}
+
+
+.about-content {
+
+    display: grid;
+
+    grid-template-columns:
+        90px
+        1fr;
+
+    gap: 16px;
+
+    align-items: center;
+}
+
+
+.about-image {
+
+    width: 85px;
+
+    height: 90px;
+
+    object-fit: contain;
+
+    transform:
+        rotate(-3deg);
+}
+
+
+.about-text {
+
+    font-size: 12px;
+
+    line-height: 1.65;
+
+    color: #0f172a;
+}
+
+
+.about-text p {
+
+    margin:
+        5px 0 9px;
+}
+
+
+.learning {
+
+    font-size: 10px;
+
+    color: #0284c7;
+}
+
+
+/* =========================================
+   SOCIAL LINKS
+========================================= */
+
+.links-box {
+
+    flex-shrink: 0;
+
+    padding: 10px;
+
+    background: #ecfdf5;
+
+    border:
+        3px ridge
+        #a7f3d0;
+
+    transform:
+        rotate(.4deg);
+}
+
+
+.socials {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+}
+
+
+.socials a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding:
+        7px 10px;
+
+    color: #064e3b;
+
+    background:
+        #d1fae5;
+
+    border:
+        3px outset
+        #f8fafc;
+
+    font-size: 10px;
+
+    text-decoration: none;
+}
+
+
+.socials a:hover {
+
+    background:
+        #fecaca;
+
+    color:
+        #7f1d1d;
+
+    transform:
+        rotate(-2deg);
+}
+
+
+.socials span {
+    font-size: 16px;
+}
+
+
+/* =========================================
+   UNDER CONSTRUCTION
+========================================= */
+
+.under-construction {
+
+    flex-shrink: 0;
+
+    margin:
+        4px 20px;
+
+    padding: 6px;
+
+    color: #fecaca;
+
+    background:
+        repeating-linear-gradient(
+            45deg,
+            #ef4444 0,
+            #ef4444 10px,
+            #020617 10px,
+            #020617 20px
+        );
+
+    border:
+        3px solid
+        #020617;
+
+    font-family:
+        monospace;
+
+    font-size: 8px;
+
+    text-align: center;
+}
+
+
+.under-construction span {
+    margin: 0 8px;
+}
+
+
+/* =========================================
+   RIGHT FLOATING WINDOWS
+========================================= */
+
+.right-windows {
+
+    position: absolute;
+
+    top: 15px;
+
+    right: -175px;
+
+    width: 300px;
+
+    z-index: 20;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   GENERIC FLOATING WINDOW
+========================================= */
+
+.floating-window {
+
+    pointer-events: auto;
+
+    background:
+        #bfdbfe;
+
+    border:
+        4px double
+        #1e3a8a;
+
+    box-shadow:
+        5px 6px 0
+        #1e293b;
+}
+
+
+/* Messy positioning */
+
+.konata-window {
+
+    width: 190px;
+
+    margin-left: 20px;
+
+    transform:
+        rotate(.7deg);
+}
+
+
+.artists-window {
+
+    width: 175px;
+
+    margin-left: 0;
+
+    transform:
+        rotate(-1deg);
+}
+
+a {
+  color: #fca5a5;
+  text-decoration: none;
+}
+
+
+a:hover {
+  color: #ef4444;
+}
+
+.random-window {
+
+    position: absolute;
+
+    left: -175px;
+
+    top: 20px;
+
+    z-index: 20;
+
+    margin-left: 5px;
+
+    transform:
+        rotate(-3.2deg);
+}
+
+
+/* =========================================
+   FLOATING WINDOW TITLE
+========================================= */
+
+.floating-titlebar {
+
+    height: 28px;
+
+    padding:
+        5px 7px;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    color: #fecaca;
+
+    background:
+        linear-gradient(
+            90deg,
+            #172554,
+            #0369a1
+        );
+
+    border:
+        3px outset
+        #60a5fa;
+
+    font-family:
+        monospace;
+
+    font-size: 8px;
+
+    font-weight: bold;
+}
+
+
+/* =========================================
+   FLOATING CONTENT
+========================================= */
+
+.floating-content {
+
+    padding: 9px;
+
+    background:
+        #eff6ff;
+
+    min-height: 90px;
+}
+
+
+/* =========================================
+   KONATA WINDOW
+========================================= */
+
+.konata-icon {
+
+    display: block;
+
+    width: 60px;
+
+    height: 60px;
+
+    object-fit: contain;
+
+    margin:
+        0 auto 3px;
+
+    transform:
+        rotate(-3deg);
+}
+
+
+.konata-name {
+
+    color:
+        #0c4a6e;
+
+    font-family:
+        Georgia,
+        serif;
+
+    font-size: 15px;
+
+    text-align: center;
+}
+
+
+.konata-window p {
+
+    margin:
+        7px 3px;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+
+.separator {
+
+    color:
+        #0284c7;
+
+    text-align:
+        center;
+}
+
+
+.quote {
+
+    font-style:
+        italic;
+}
+
+
+/* =========================================
+   FAVOURITE ARTISTS
+========================================= */
+
+.artists-window {
+
+    background:
+        #bae6fd;
+}
+
+
+.artist {
+
+    margin:
+        5px 0;
+
+    padding:
+        7px;
+
+    color:
+        #fecaca;
+
+    background:
+        #0f172a;
+
+    border:
+        2px inset
+        #3b82f6;
+
+    font-family:
+        monospace;
+
+    font-size:
+        9px;
+}
+
+
+/* =========================================
+   RANDOM STUFF
+========================================= */
+
+.random-item {
+
+    margin:
+        5px 0;
+
+    padding:
+        5px 7px;
+
+    background:
+        #dbeafe;
+
+    border:
+        1px solid
+        #93c5fd;
+
+    font-size:
+        9px;
+}
+
+
+.random-item:nth-child(odd) {
+
+    transform:
+        rotate(-.8deg);
+}
+
+
+.random-item:nth-child(even) {
+
+    transform:
+        rotate(.7deg);
+}
+
+
+/* =========================================
+   TETO
+========================================= */
+
+.floating-character {
+
+    position: absolute;
+
+    width: 190px;
+
+    right: -105px;
+
+    top: 250px;
+
+    z-index: 25;
+
+    pointer-events: none;
+
+    filter:
+        drop-shadow(
+            4px 6px 2px
+            rgba(0,0,0,.35)
+        );
+
+    transform:
+        rotate(2deg);
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+
+    flex-shrink: 0;
+
+    padding:
+        9px;
+
+    color:
+        #bae6fd;
+
+    background:
+        #020617;
+
+    border-top:
+        4px ridge
+        #3b82f6;
+
+    font-family:
+        monospace;
+
+    font-size:
+        8px;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1250px) {
+
+    .center-column {
+
+        margin-left:
+            125px;
+
+        margin-right:
+            125px;
+    }
+
+
+    .blog-window {
+
+        left:
+            -150px;
+
+        width:
+            285px;
+    }
+
+
+    .right-windows {
+
+        right:
+            -150px;
+    }
+
+
+    .floating-character {
+
+        right:
+            -85px;
+
+        width:
+            165px;
+    }
+}
+
+
+@media (max-width: 1050px) {
+
+    .center-column {
+
+        margin-left:
+            105px;
+
+        margin-right:
+            105px;
+    }
+
+
+    .blog-window {
+
+        left:
+            -125px;
+
+        width:
+            270px;
+    }
+
+
+    .right-windows {
+
+        right:
+            -125px;
+    }
+
+
+    .floating-character {
+
+        right:
+            -70px;
+
+        width:
+            145px;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    html,
+    body {
+
+        overflow:
+            auto;
+    }
+
+
+    .site {
+
+        height:
+            auto;
+
+        min-height:
+            100vh;
+
+        margin:
+            0 auto;
+    }
+
+
+    .main-stage {
+
+        padding:
+            10px;
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+    }
+
+
+    .center-column {
+
+        height:
+            auto;
+
+        margin:
+            0;
+    }
+
+
+    .blog-window {
+
+        position:
+            relative;
+
+        left:
+            auto;
+
+        top:
+            auto;
+
+        width:
+            100%;
+
+        height:
+            350px;
+
+        order:
+            -1;
+    }
+
+
+    .right-windows {
+
+        position:
+            relative;
+
+        top:
+            auto;
+
+        right:
+            auto;
+
+        width:
+            100%;
+
+        order:
+            10;
+
+        flex-direction:
+            row;
+
+        flex-wrap:
+            wrap;
+    }
+
+
+    .konata-window,
+    .artists-window,
+    .random-window {
+
+        width:
+            calc(50% - 8px);
+
+        margin:
+            0;
+    }
+
+
+    .floating-character {
+
+        position:
+            absolute;
+
+        right:
+            5px;
+
+        top:
+            600px;
+
+        width:
+            120px;
+
+        opacity:
+            .4;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .konata-window,
+    .artists-window,
+    .random-window {
+
+        width:
+            100%;
+    }
+
+
+    .about-content {
+
+        grid-template-columns:
+            70px
+            1fr;
+    }
+
+
+    .about-image {
+
+        width:
+            65px;
+
+        height:
+            70px;
+    }
+
+
+    .about-text {
+
+        font-size:
+            11px;
+    }
+
+
+    .blog-post {
+
+        padding-right:
+            12px;
+
+        padding-bottom:
+            55px;
+    }
+
+
+    .blog-link {
+
+        top:
+            auto;
+
+        bottom:
+            8px;
+
+        right:
+            8px;
+
+        transform:
+            none;
+    }
+
+
+    .floating-character {
+
+        display:
+            none;
+    }
+}

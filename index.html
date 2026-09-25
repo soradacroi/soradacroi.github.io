@@ -1,592 +1,489 @@
-<html>
-  <head>
-    <title>home | soradacroi</title>
-  </head>
-  <style>
-    @font-face {
-      font-family: 'OpenSans';
-      src: url('fonts/OpenSans-Variable.woff2') format('woff2');
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    body {
-      background-color: #ffffff;
-      background-image: url("resources/bg.webp");
-      text-align: center;
-      margin: 20px;
-      font-family: georgia;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    .no-scroll {
-      overflow: hidden;
-    }
+    <title>ashura's something</title>
 
-    .box {
-      position: relative;
-      width: 70%;
-      height: 550px;
-      background-color: rgba(170, 170, 170, 0.351);
-      border-radius: 1.5%;
-      margin-top: 170px;
-      margin-left: 60px;
-      min-width: 400px;
-      max-width: 800px;
-      border: rgb(55, 55, 55) 2px solid;
-      box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-bottom: 0;
-      transition: box-shadow 0.2s;
-      z-index: 100;
-    }
-    .box:hover {
-      box-shadow: 0px 0px 20px rgba(24, 26, 29, 0.4);
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 80vh;
-      width: 95vw;
-    }
-    p {
-      font-size: 30px;
-      font-family: OpenSans, sans-serif;
-      margin-top: 10px;
-    }
-    .text-box {
-      margin-top: -18.5px;
-      background-image: linear-gradient(
-        to bottom,
-        rgba(249, 245, 245, 0.903),
-        rgb(250, 250, 250)
-      );
-      margin-left: 2.2px;
-      width: 99.4%;
-      height: 87.9%;
-      border-radius: 0.4% 0.4% 1.5% 1.5%;
-      transition: box-shadow 0.2s;
-    }
-    .text1 {
-      text-align: left;
-      margin-left: 20px;
-      color: #1a1a1a;
-      font-weight: 100;
-    }
-    .img {
-      margin-top: 0px;
-      margin-bottom: 0;
-      opacity: 0.5;
-    }
-    .text2 {
-      padding-top: 90px;
-      font-size: 35px;
-      color: #313131;
-      font-weight: 500;
-      margin-bottom: 0px;
-    }
+    <link rel="stylesheet" href="style.css">
+</head>
 
-    .text3 {
-      padding-top: 0px;
-      font-size: 20px;
-      color: #313131;
-      font-weight: 500;
-    }
 
-    .sora {
-      color: #dd3737f2;
-    }
+<body>
 
-    .button-container-bottom {
-      display: flex;
-      justify-content: center;
-      text-align: left;
-      gap: 50px;
-      margin-top: 30px;
-      padding-left: 15px;
-      padding-right: 15px;
-    }
+<div class="site">
 
-    .resume-button {
-      font-size: larger;
-      font-weight: bold;
-      cursor: pointer;
-      background-color: #ff4d4d00;
-      border-color: #262626;
-      border-style: solid;
-      color: #313131;
-      border-radius: 5px;
-      width: 140px;
-      height: 75px;
-    }
-    .resume-button:hover {
-      background-color: #6248481e;
-      color: rgb(34, 34, 34);
-    }
-    .resume-button:active {
-      opacity: 0.7;
-    }
 
-    .button-container-top {
-      display: flex;
-      justify-content: center;
-      text-align: left;
-      gap: 50px;
-      margin-top: 30px;
-      padding-left: 15px;
-      padding-right: 15px;
-    }
+    <!-- =====================================
+         HEADER
+    ====================================== -->
 
-    .works-button {
-      font-size: larger;
-      font-weight: bold;
-      cursor: pointer;
-      background-color: #ff4d4d00;
-      border-color: #262626;
-      border-style: solid;
-      color: #313131;
-      border-radius: 5px;
-      width: 140px;
-      height: 75px;
-    }
-    .works-button:hover {
-      background-color: #6248481e;
-      color: rgb(34, 34, 34);
-    }
-    .works-button:active {
-      opacity: 0.7;
-    }
-    .about-button {
-      font-size: larger;
-      font-weight: bold;
-      cursor: pointer;
-      background-color: #ff4d4d00;
-      border-color: #262626;
-      border-style: solid;
-      color: #313131;
-      border-radius: 5px;
-      width: 140px;
-      height: 75px;
-    }
-    .about-button:hover {
-      background-color: #6248481e;
-      color: rgb(34, 34, 34);
-    }
-    .about-button:active {
-      opacity: 0.7;
-    }
-    .music-button {
-      width: 90px;
-      height: 55px;
-      position: relative;
-      top: -156px;
-      right: 59px;
-      font-size: 40;
-      font-weight: bold;
-      cursor: pointer;
-      border: lab(52.8% 0 -0.01) 2px solid;
-      border-radius: 7px;
-      border-width: 1px;
-      border-bottom: 0;
-      color: rgb(21, 21, 21);
-      background-color: rgba(240, 240, 240, 0.283);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(8px);
-      margin: 0px;
-      box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
-      transition: box-shadow 0.2s;
-    }
-    .clicked {
-      border: lab(17.53% 0 0) 2px solid;
-      border-bottom: 0;
-      background-color: #cacacabf;
-      right: 20px;
-    }
-    .music-button:hover {
-      box-shadow: 0px 0px 20px rgba(24, 26, 29, 0.3);
-      right: 20px;
-    }
+    <header class="header">
 
-    .copyright {
-      font-family: OpenSans, sans-serif;
-      position: absolute;
-      bottom: 0;
-      left: 48.6%;
-      transform: translateX(-50%);
-    }
+        <div class="tiny-header">
 
-    .abt-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 15px;
-      background-color: #f3f3f38f;
-      border-radius: 10px 10px 0 0;
-      margin: -30px;
-      margin-bottom: 30px;
-      cursor: move;
-    }
+            <span>
+                ★ welcome to my corner of the internet ★
+            </span>
 
-    .abt-container {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      z-index: 1000;
-    }
-    .popup-wrapper {
-      display: none;
-      position: absolute;
-      z-index: 1001;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+            <span>
+                idk what to write tbh
+            </span>
 
-    .pop-content {
-      border: rgb(45, 43, 43) 2px solid;
-      background-color: rgb(233, 233, 233);
-      box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
-      padding: 30px;
-      border-radius: 10px;
-      height: 660px;
-      max-width: 500px;
-      width: 500px;
-      position: relative; 
-      top: 0;
-      left: 0;
-      transform: none; 
-      text-align: center;
-    }
-    .close-button {
-      position: relative;
-      font-size: 24px;
-      font-weight: bold;
-      border: none;
-      background: none;
-      cursor: pointer;
-      color: #333;
-      transition: background-color 0.3s;
-    }
-    .close-button:hover{
-      background-color: #ff000089;
-      color: #171717;
-    }
-
-    .pop-content h2 {
-      font-family: OpenSans, sans-serif;
-      color: #252525;
-      margin: 0;
-    }
-    .pop-content-work h2 {
-      font-family: OpenSans, sans-serif;
-      color: #252525;
-      margin: 0;
-    }
-
-    .pop-content p {
-      color: #1a1a1a;
-      font-size: 16px;
-      line-height: 1.5;
-    }
-
-    img.pfp {
-      width: 128px;
-      height: 128px;
-    }
-
-    .abtme p {
-        font-size: 20px;
-        margin: 0%;
-        text-align: justify;
-    }
-
-    .header-section {
-      display: flex;
-      align-items: center; 
-      justify-content: center;
-      gap: 15px;
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 600px;
-    }
-
-    .header-section img {
-      width: 80px; 
-      height: 80px; 
-      border-radius: 50%;
-    }
-
-    .header-section .greeting {
-      font-size: 1.8em;
-      margin: 0;
-      white-space: nowrap;
-    }
-
-    .link{
-      color: #0a1c3f;
-      font-size: 20px;
-      text-decoration: none;
-      margin-right: 40px;
-    }
-    .link:hover{
-      color: #0d00ff;
-    }
-    .pop-content-work{
-      border: rgb(45, 43, 43) 2px solid;
-      background-color: rgb(233, 233, 233);
-      box-shadow: 0px 0px 10px rgba(24, 26, 29, 0.5);
-      padding: 30px;
-      border-radius: 10px;
-      height: 660px;
-      max-width: 900px;
-      width: 900px;
-      position: relative; 
-      top: 0;
-      left: 0;
-      transform: none; 
-      text-align: center;
-    }
-    .abt-header-work {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 15px;
-      background-color: #f3f3f38f;
-      border-radius: 10px 10px 0 0;
-      margin: -30px;
-      margin-bottom: 30px;
-      cursor: move;
-    }
-    
-  </style>
-
-  <div class="container">
-    <div class="box">
-      <p class="text1" style="color: black">&#8962; home</p>
-      <div class="text-box">
-        <p class="text2">
-          hi! i am <span class="sora">soradacroi</span>
-        </p>
-        <p class="text3">
-          a data science student, an artist, and a developer
-        </p>
-        <div class="button-container-top" style="margin-top: 90px">
-          <button class="about-button" id="abt" style="border-width: 3px; z-index: 105">
-            about me
-          </button>
-          <button class="works-button" id="work" style="margin-left: 5%; border-width: 3px; z-index: 105">
-            works     
-          </button>
-          <button class="resume-button" id="resume" data-link="resources\resume.pdf" style="margin-left: 5%; border-width: 3px; z-index: 105">
-            resume
-          </button>
         </div>
-      </div>
-    </div>
-    <button id="playMusicButton" class="music-button">&#9836;</button>
-  </div>
-  <div class="copyright">&#169; 2025 soradacroi. All Rights Reserved.</div>
 
-  <div id="aboutPopup" class="popup-wrapper">
-    <div class="pop-content">
-      <div id="abtHeader" class="abt-header">
-        <h2>about me</h2>
-        <button class="close-button">[x]</button>
-      </div>
-      <div class="abtme" style="font-family: OpenSans; font-weight: 600">
-        <div class="header-section">
-          <img src="resources\Default_pfp.webp" style="-webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable="false" class="pfp">
-          
-          <p class="greeting" style="color: #2a1d1d;">hey there, it's sora.</p>
+
+        <div class="logo-area">
+
+            <div class="logo">
+                ashura<span>.moe</span>
+            </div>
+
         </div>
-        <hr style="border: none; background-color: #515151; height: 3px;">
-        <p>I am currently pursuing my bachelor's degree in data science. A learner who finds joy in math, solving problems, programming,
-          making illustrations, and making some truly questionable music. I believe that creativity and logic go hand-in-hand.
-        </p>
-        <p style="color: #703b3b; font-size: 24px;">EDUCATION</p>
-        <p>[i will put after i complete my degree]</p>
-        <p style="color: #703b3b; font-size: 24px;">SKILLS</p>
-        <ul style="list-style: disc; padding: 0; margin: 0; text-align: left; font-size: 20px; color: #1a1a1a;">
-          <li>programming languages: python, c, gd-script, html/css, js </li>
-          <li>art and design: photoshop, medibang, opentoonz</li>
-          <li>music: fl studio, reaper, utau</li>
-        </ul>
-        <hr style="border: none; background-color: #515151; height: 3px;">
-        <p style="  -webkit-user-select: text; -moz-user-select: text; user-select: text;">email me: soradacroi@gmail.com</p>
-        <hr style="border: none; background-color: #515151; height: 3px;">
-        <p style="color: #703b3b; font-size: 24px;">LINKS</p>
-        <p>
-          <a class="link" target="_blank" href="https://github.com/soradacroi">github</a>
-          <a class="link" target="_blank" href="https://www.instagram.com/sora_da_croi/">instagram</a>
-          <a class="link" target="_blank" href="https://x.com/iam_ashura_">twitter</a>
-        </p>
-      </div>
-    </div>
-  </div>
 
-<div id="worksPopup" class="popup-wrapper">
-  <div class="pop-content-work">
-    <div id="worksHeader" class="abt-header-work">
-      <h2>my works</h2>
-      <button class="close-button">[x]</button>
+    </header>
+
+
+
+    <!-- =====================================
+         MAIN STAGE
+    ====================================== -->
+
+    <div class="main-stage">
+
+
+        <!-- =================================
+             BLOG.EXE
+        ================================== -->
+
+        <section class="blog-window">
+
+            <div class="blog-titlebar">
+
+                <span>
+                    BLOG.EXE
+                </span>
+
+                <span class="window-buttons">
+                    ─ □ ×
+                </span>
+
+            </div>
+
+
+            <div
+                id="blog-list"
+                class="blog-scroll"
+            >
+
+                <div class="loading">
+                    loading blogs...
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================
+             CENTER CONTENT
+        ================================== -->
+
+        <main class="center-column">
+
+
+            <!-- WELCOME -->
+
+            <section
+                class="intro-box"
+                id="home"
+            >
+
+                <div class="intro-top">
+
+                    <span>
+                        welcome.txt
+                    </span>
+
+                    <span>
+                        [ x ]
+                    </span>
+
+                </div>
+
+
+                <div class="intro-content">
+
+                    <div>
+
+                        <p class="small-note">
+                            hello, internet!
+                        </p>
+
+
+                        <h1>
+                            I'm ashura.
+                        </h1>
+
+
+                        <p>
+                            i make things with computers,
+                            music, art, programs, whatever
+                            tbh i dont know wtf i do <br> with 
+                            my life
+                        </p>
+
+
+                        <p>
+                            this is my little corner of the
+                            internet where i dump stuffs,
+                            thoughts, and whatever else I feel
+                            like putting here.
+                            <br>
+                            (hopefully it was not very helpfull)
+                        </p>
+
+                    </div>
+
+
+                    <div class="mini-sticker">
+
+                        <span>☆</span>
+
+                        luckkkkkkkkkkyyy
+                        starrrr
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- DECORATION -->
+
+            <div class="scribble">
+                ★ ★ ★ ★ ★
+            </div>
+
+
+
+            <!-- ABOUT -->
+
+            <section
+                class="about-box"
+                id="about"
+            >
+
+                <div class="section-label">
+                    about me
+                </div>
+
+
+                <div class="about-content">
+
+
+                    <img
+                        src="assets/main.jpg"
+                        class="about-image"
+                        alt="Konata"
+                    >
+
+
+                    <div class="about-text">
+
+                        <p>
+                            I'm a student interested in
+                            artificial intelligence,
+                            machine learning, programming,
+                            making music, making art and whatever.
+                        </p>
+
+
+                        <p>
+                            I like experimenting with small
+                            models, writing code and making
+                            unnecessarily complicated side
+                            projects.
+                        </p>
+
+
+                        <p class="learning">
+
+                            currently learning:
+                            machine learning /
+                            mathematics /
+                            whatever looks interesting
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- LINKS -->
+
+            <section
+                class="links-box"
+                id="links"
+            >
+
+                <div class="section-label">
+                    places where I exist
+                </div>
+
+
+                <div class="socials">
+
+
+                    <a
+                        href="https://x.com/iam_ashura_"
+                        target="_blank"
+                        rel="noopener"
+                    >
+
+                        X / Twitter
+
+                    </a>
+
+
+                    <a
+                        href="https://instagram.com/sora_da_croi"
+                        target="_blank"
+                        rel="noopener"
+                    >
+
+                        Instagram
+
+                    </a>
+
+
+                    <a
+                        href="https://github.com/soradacroi"
+                        target="_blank"
+                        rel="noopener"
+                    >
+
+                        GitHub
+
+                    </a>
+
+                    <a href="mailto:soradacroi@gmail.com">Email</a>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- UNDER CONSTRUCTION -->
+
+            <div class="under-construction">
+            </div>
+
+
+        </main>
+
+
+
+        <!-- =================================
+             RIGHT FLOATING WINDOWS
+        ================================== -->
+
+        <aside class="right-windows">
+
+
+            <!-- KONATA -->
+
+            <section class="floating-window konata-window">
+
+                <div class="floating-titlebar">
+
+                    <span>
+                        KONATA CORNER
+                    </span>
+
+                    <span>
+                        ─ □ ×
+                    </span>
+
+                </div>
+
+
+                <div class="floating-content">
+
+                    <img
+                        src="assets/konata-icon.png"
+                        class="konata-icon"
+                        alt="Konata"
+                    >
+
+
+                    <div class="konata-name">
+                        Konata
+                    </div>
+
+
+                    <p>
+                        that is konata <br>
+                        and she is very serious
+                    </p>
+
+
+                    <div class="separator">
+                        ─────────────
+                    </div>
+
+
+                    <p class="quote">
+                        ""A flat chest is a status symbol!"" <br>
+                          ― Konata Izumi"
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- FAVOURITE ARTISTS -->
+
+            <section class="floating-window artists-window">
+
+                <div class="floating-titlebar">
+
+                    <span>
+                        FAV ARTISTS
+                    </span>
+
+                    <span>
+                        ─ □ ×
+                    </span>
+
+                </div>
+
+
+                <div class="floating-content">
+
+
+                    <div class="artist">
+                      <a href="https://music.youtube.com/@ado1024?si=Xi2nbyTVkD2lc5EC">♫ Ado</a>
+                    </div>
+
+
+                    <div class="artist">
+                         <a href="https://music.youtube.com/@9lana357?si=QTGbcumHAjALrk-e">♫ 9lana</a>
+                    </div>
+
+
+                    <div class="artist">
+                        <a href="https://music.youtube.com/@troopersalute?si=wm6u_iqzam6H-Bo7">♫ Trooper Salute</a>
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- RANDOM STUFF -->
+
+            <section class="floating-window random-window">
+
+                <div class="floating-titlebar">
+
+                    <span>
+                        RANDOM STUFF
+                    </span>
+
+                    <span>
+                        ─ □ ×
+                    </span>
+
+                </div>
+
+
+                <div class="floating-content">
+
+
+                    <div class="random-item">
+                        hjgsawqroiywqoiwrqyojwyrq
+                    </div>
+
+
+                    <div class="random-item">
+                        "what is this?"
+                        <br>
+                        "keyboard smash"
+                    </div>
+
+
+                    <div class="random-item">
+                        "how do i do it?"
+                        <br>
+                        "just press whatever lol"
+                    </div>
+
+
+                    <div class="random-item">
+                        7
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </aside>
+
+
+
+        <!-- =================================
+             TETO
+        ================================== -->
+
+        <img
+            src="assets/teto.png"
+            class="floating-character"
+            alt=""
+        >
+
+
     </div>
-    
-    <div id="content-list" style="overflow-y: auto; height: 500px; padding: 20px; display: flex; flex-direction: column; align-items: center;">
-    </div>
-  </div>
+
+
+
+    <!-- =====================================
+         FOOTER
+    ====================================== -->
+
+    <footer>
+
+        <br>
+        Copyright (c) 2026 ashura (soradacroi). All Rights Reserved.
+
+    </footer>
+
+
 </div>
 
-  
-  <audio id="myMusic">
-    <source src="resources/2.mp3" type="audio/mpeg" />
-  </audio>
 
-  <audio id="hover">
-    <source src="resources/hover.wav" type="audio/wav" />
-  </audio>
+<script src="script.js"></script>
 
-  <audio id="button-clicked">
-    <source src="resources/button-clicked.wav" type="audio/wav" />
-  </audio>
+</body>
 
-  <audio id="unclicked">
-    <source src="resources/unclicked.wav" type="audio/wav" />
-  </audio>
-
-  <script src="works.js"></script> <!---i am fucking dumb ahh-->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const playButton = document.getElementById('playMusicButton');
-      const music = document.getElementById('myMusic');
-      music.loop = true;
-      const hover = document.getElementById('hover');
-      const button_clicked = document.getElementById('button-clicked');
-      const unclicked = document.getElementById('unclicked');
-
-      const abtButton = document.getElementById('abt');
-      const workButton = document.getElementById('work');
-      const resumeButton = document.getElementById('resume');
-
-      const aboutPopup = document.getElementById('aboutPopup');
-      const worksPopup = document.getElementById('worksPopup');
-
-      const closeButtons = document.querySelectorAll('.close-button');
-      const popups = document.querySelectorAll('.popup-wrapper');
-
-      let zIndexCounter = 1000;
-
-      function bringToFront(popup) {
-        zIndexCounter++;
-        popup.style.zIndex = zIndexCounter;
-      }
-
-      abtButton.addEventListener('click', () => {
-        button_clicked.play();
-      });
-      workButton.addEventListener('click', () => {
-        button_clicked.play();
-      });
-      resumeButton.addEventListener('click', () => {
-        button_clicked.play();
-      });
-
-      playButton.addEventListener('click', () => {
-        if (music.paused) {
-          button_clicked.play();
-          music.play();
-        } else {
-          unclicked.play();
-          music.pause();
-          music.currentTime = 0;
-        }
-        playButton.classList.toggle('clicked');
-      });
-
-      playButton.addEventListener('mouseover', () => {
-        if (music.paused) {
-          hover.play();
-        }
-      });
-
-      playButton.addEventListener('mouseleave', () => {
-        if (music.paused) {
-          hover.play();
-        }
-      });
-
-      abtButton.addEventListener('click', () => {
-        if (aboutPopup.style.display !== 'flex') {
-          aboutPopup.style.display = 'flex';
-          bringToFront(aboutPopup);
-          document.body.classList.add('no-scroll');
-        } else {
-          bringToFront(aboutPopup);
-        }
-      });
-      workButton.addEventListener('click', () => {
-        if (worksPopup.style.display !== 'flex') {
-          worksPopup.style.display = 'flex';
-          bringToFront(worksPopup);
-          document.body.classList.add('no-scroll');
-        } else {
-          bringToFront(worksPopup);
-        }
-      });
-
-      closeButtons.forEach(button => {
-        button.addEventListener('click', event => {
-          event.target.closest('.popup-wrapper').style.display = 'none';
-          unclicked.play();
-          document.body.classList.remove('no-scroll');
-        });
-      });
-
-      let isDragging = false;
-      let startX, startY, currentPopup;
-
-      popups.forEach(popup => {
-        popup.addEventListener('mousedown', e => {
-          bringToFront(popup);
-
-          if (e.target.closest('.abt-header, .abt-header-work')) {
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            currentPopup = popup;
-            currentPopup.style.position = 'absolute';
-            e.preventDefault();
-          }
-        });
-      });
-
-      document.addEventListener('mousemove', e => {
-        if (isDragging) {
-          const dx = e.clientX - startX;
-          const dy = e.clientY - startY;
-          const currentLeft = currentPopup.offsetLeft;
-          const currentTop = currentPopup.offsetTop;
-          currentPopup.style.left = `${currentLeft + dx}px`;
-          currentPopup.style.top = `${currentTop + dy}px`;
-          startX = e.clientX;
-          startY = e.clientY;
-        }
-      });
-
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-        currentPopup = null;
-      });
-    });
-
-    document.getElementById('resume').addEventListener('click', () => {
-      window.open(document.getElementById('resume').getAttribute('data-link'), '_blank');
-    });
-  </script>
 </html>
