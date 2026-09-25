@@ -1,0 +1,15 @@
+body{
+  background-color: #FBF5D9;
+}
+
+.bio {
+    border: 1px solid darkblue;
+    padding: 20px;
+    width: 300px;
+}
+
+.content{
+    border: 1px solid darkblue;
+    padding: 20px;
+    width: 300px;
+}
