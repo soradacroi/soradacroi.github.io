@@ -1,6 +1,6 @@
 async function loadText() {
   try {
-    const response = await fetch('works.txt');
+    const response = await fetch('blogs.txt');
     const fullText = await response.text();
     const lines = fullText.split(/\r?\n/);
     const listContainer = document.getElementById('content-list');
