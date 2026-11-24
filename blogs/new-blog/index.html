@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>this is my name</title>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+body {
+  margin: 0;
+  padding: 24px 12px;
+  background: #008080 url("../../src/bg.png") repeat;
+  color: #000000;
+  font-family: "MS Sans Serif", Tahoma, Verdana, "MS PGothic", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.win95-raised {
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow:
+    inset 1px 1px 0 #dfdfdf,
+    inset -1px -1px 0 #808080,
+    4px 4px 0 rgba(0, 0, 0, 0.35);
+}
+
+.win95-sunken {
+  background: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow:
+    inset 1px 1px 0 #404040,
+    inset -1px -1px 0 #dfdfdf;
+}
+
+.heading {
+  max-width: 700px;
+  margin: 0 auto 14px;
+  padding: 6px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heading a {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #c0c0c0;
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+}
+
+.heading a:hover {
+  background: #cfcfcf;
+}
+
+.heading a:active {
+  border-top: 2px solid #404040;
+  border-left: 2px solid #404040;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: none;
+  padding: 3px 9px 1px 11px;
+}
+
+.page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 4px;
+}
+
+.page-content {
+  padding: 16px 20px;
+}
+
+.post-date {
+  font-size: 12px;
+  color: #404040;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #ffffff;
+}
+
+h1, h2, h3 {
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+  color: #000000;
+}
+
+h1 {
+  margin-top: 0;
+  padding-bottom: 6px;
+  border-bottom: 2px groove #dfdfdf;
+  font-size: 19px;
+}
+
+h2 {
+  font-size: 15px;
+}
+
+h3 {
+  font-size: 13px;
+}
+
+p, ul, ol, blockquote, pre, table {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+a {
+  color: #0000aa;
+}
+
+a:visited {
+  color: #660066;
+}
+
+blockquote {
+  margin-left: 0;
+  padding: 8px 12px;
+  background: #e6e6e6;
+  color: #222222;
+  border-top: 1px solid #808080;
+  border-left: 3px solid #000080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+code, pre {
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 12.5px;
+}
+
+code {
+  background: #dcdcdc;
+  padding: 1px 4px;
+  border: 1px solid #a0a0a0;
+}
+
+pre {
+  background: #ffffff;
+  padding: 10px;
+  overflow-x: auto;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow:
+    inset 1px 1px 0 #404040,
+    3px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  background: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+th, td {
+  padding: 5px 8px;
+  text-align: left;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+}
+
+th {
+  background: #c0c0c0;
+  font-weight: bold;
+}
+
+img {
+  max-width: 100%;
+  max-height: 360px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 12px auto;
+  padding: 3px;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow:
+    inset 1px 1px 0 #dfdfdf,
+    inset -1px -1px 0 #808080,
+    4px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+hr {
+  border: 0;
+  height: 2px;
+  background: #808080;
+  border-bottom: 1px solid #ffffff;
+  margin: 18px 0;
+}
+
+.yt-embed-wrap {
+  margin: 12px 0;
+}
+
+.yt-embed {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow:
+    inset 1px 1px 0 #dfdfdf,
+    inset -1px -1px 0 #808080,
+    4px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.yt-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.yt-fallback {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+</style>
+</head>
+<body>
+<div class="heading win95-raised">
+  <a href="https://ashura.moe/">Home</a>
+  <a href="https://ashura.moe/blogs">Posts</a>
+</div>
+<div class="page win95-raised">
+  <div class="page-content win95-sunken">
+<h1>this is my name</h1>
+<p>my name is ashura 
+i can do math here</p>
+<div class="arithmatex">\[
+S = \sum_{i=0}^{n}x_{i}
+\]</div>
+<p>i can also code</p>
+<pre><code class="language-python">def something():
+    print(&quot;hello world&quot;)
+</code></pre>
+<div class="yt-embed-wrap">
+  <div class="yt-embed">
+    <iframe src="https://www.youtube-nocookie.com/embed/OFIbd-Cwiao" title="YouTube video player" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  </div>
+  <div class="yt-fallback"><a href="https://www.youtube.com/watch?v=OFIbd-Cwiao" target="_blank" rel="noopener noreferrer">Watch on YouTube</a></div>
+</div>
+  </div>
+</div>
+</body>
+</html>
